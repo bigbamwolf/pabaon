@@ -342,8 +342,15 @@ async function quote(lat, lng){
     r.roads = roads; CO.quote = r;
     var m = store('pb_me') || {}; m.pin = [lat, lng]; store('pb_me', m);
     q.innerHTML = '<b>' + r.exact_km + ' km</b> from our ' + esc(r.from) + ' pwesto, charged as ' + r.km + ' km. Delivery <b>' + peso(r.fee) + '</b>';
-  } catch (e) { if (me !== QSEQ) return; q.className = 'quote bad'; q.textContent = e.message; }
+  } catch (e) {
+    if (me !== QSEQ) return; q.className = 'quote bad'; q.textContent = e.message;
+    if (/Lalamove/.test(e.message)) q.insertAdjacentHTML('beforeend', '<br><button type="button" class="btn dark" style="margin-top:10px;padding:11px" onclick="farPickup()">Switch to pick up, I will book Lalamove</button>');
+  }
   sum();
+}
+function farPickup(){
+  var n = $('notes'); if (n && n.value.indexOf('Lalamove') < 0) n.value = (n.value ? n.value + ' | ' : '') + 'Far address, I will book my own Lalamove or Grab for pick up';
+  setF('PICK UP'); window.scrollTo(0, 0);
 }
 async function mapSearch(){
   var t = $('msearch').value.trim(); if (!t) return;
