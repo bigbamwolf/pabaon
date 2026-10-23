@@ -96,6 +96,8 @@ input.i:focus,select.i:focus,textarea.i:focus{border-color:var(--y)}
 .sum td{padding:5px 0;vertical-align:top}
 .sum td:last-child{text-align:right;white-space:nowrap}
 .sum tr.free td{color:var(--ok)}
+.sum s{color:var(--mute);margin-right:6px;font-weight:500}
+.saved{margin-top:8px;padding:9px 12px;border-radius:12px;background:var(--okl);color:var(--ok);font:800 14px 'Nunito',sans-serif;text-align:center}
 .sum tr.tot td{border-top:1.5px dashed var(--line);padding-top:10px;font:900 19px 'Fira Sans',sans-serif}
 .btn{display:block;width:100%;padding:15px;border-radius:14px;border:0;background:var(--y);font:800 16px 'Nunito',sans-serif;cursor:pointer;text-align:center;text-decoration:none;color:var(--k)}
 .btn.dark{background:var(--k);color:var(--y)}
@@ -386,13 +388,19 @@ function pays(){
   $('pays').innerHTML = list.map(function(p){ return '<button class="' + (CO.payment === p ? 'on' : '') + '" onclick="CO.payment=\'' + p + '\';pays()">' + label[p] + '</button>'; }).join('');
   $('payNote').textContent = CO.payment === 'CASH ON DELIVERY' ? 'Pay the rider in cash. Please prepare the exact amount.' : CO.payment ? 'Send your payment after placing the order, then upload the screenshot. We start cooking once it is confirmed.' : '';
 }
+function freeList(meals){
+  var out = [];
+  [S.free_side, S.free_drink].forEach(function(f){ if (f && f.per_meal > 0 && meals) out.push({ name: f.name, qty: meals * f.per_meal, value: meals * f.per_meal * (f.value || 0) }); });
+  return out;
+}
 function sum(){
   var h = '';
   cartLines().forEach(function(l){ var m = item(l.item_id); h += '<tr><td>' + l.qty + ' x ' + esc(m.name) + '</td><td>' + peso(l.qty * m.price) + '</td></tr>'; });
-  var meals = cartMeals();
-  if (meals) h += '<tr class="free"><td>' + meals * S.free_side.per_meal + ' x Free bagoong (1 per meal)</td><td>' + peso(0) + '</td></tr>';
+  var free = freeList(cartMeals()), saved = 0;
+  free.forEach(function(f){ saved += f.value; h += '<tr class="free"><td>' + f.qty + ' x ' + esc(f.name) + ' (free with every meal)</td><td>' + (f.value ? '<s>' + peso(f.value) + '</s>' : '') + 'FREE</td></tr>'; });
   if (CO.fulfillment === 'DELIVERY') h += '<tr><td>Delivery fee' + (CO.quote ? ' (' + CO.quote.km + ' km)' : '') + '</td><td>' + (CO.quote ? peso(CO.quote.fee) : 'pin your location') + '</td></tr>';
   h += '<tr class="tot"><td>Total</td><td>' + peso(cartFood() + fee()) + '</td></tr>';
+  if (saved) h += '<tr><td colspan="2"><div class="saved">You saved ' + peso(saved) + ' on free add ons</div></td></tr>';
   $('sum').innerHTML = h;
 }
 
@@ -430,8 +438,9 @@ function placed(){
   if (!last) { go('#/track'); return; }
   var r = last.res;
   var h = '<div class="card center"><p class="muted" style="margin:0">Order placed. Thank you!</p><div class="big">' + esc(r.order_id) + '</div><p class="muted" style="margin:4px 0 0">Keep this number to track your order.</p></div>'
-    + '<div class="card"><table class="sum"><tr><td>Food</td><td>' + peso(r.food) + '</td></tr>' + (r.free_sides ? '<tr class="free"><td>' + r.free_sides + ' x Free bagoong</td><td>' + peso(0) + '</td></tr>' : '')
-    + (r.fee ? '<tr><td>Delivery fee</td><td>' + peso(r.fee) + '</td></tr>' : '') + '<tr class="tot"><td>Total</td><td>' + peso(r.total) + '</td></tr></table>'
+    + '<div class="card"><table class="sum"><tr><td>Food</td><td>' + peso(r.food) + '</td></tr>'
+    + (r.free || []).map(function(f){ return '<tr class="free"><td>' + f.qty + ' x ' + esc(f.name) + ' (free)</td><td>' + (f.value ? '<s>' + peso(f.value) + '</s>' : '') + 'FREE</td></tr>'; }).join('')
+    + (r.fee ? '<tr><td>Delivery fee</td><td>' + peso(r.fee) + '</td></tr>' : '') + '<tr class="tot"><td>Total</td><td>' + peso(r.total) + '</td></tr></table>' + (r.saved ? '<div class="saved">You saved ' + peso(r.saved) + ' on free add ons</div>' : '')
     + '<p class="muted">' + esc(r.slot_label) + ' &middot; ' + esc(r.payment) + '</p></div>';
   if (r.payment !== 'CASH ON DELIVERY') h += '<div class="card"><h2>Pay and upload your proof</h2>' + payBox(r.pay_to, r.total) + proofForm(r.order_id, last.phone) + '</div>';
   else h += '<div class="okbox">Cash on delivery. We will confirm your order shortly. Please prepare ' + peso(r.total) + '.</div>';
