@@ -521,6 +521,7 @@ async function boot(){
   if (cached && cached.menu) { S = cached; route(); }
   if (await refreshStore()) {
     var v = (location.hash || '#/').slice(2).split('/')[0];
+    if (v === 'track' || v === 'stamps') return;
     if (!cached || v === '' || v === 'menu') route();
     else if (v === 'checkout' && $('days')) { days(); pays(); sum(); }
   }
