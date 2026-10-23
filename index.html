@@ -1,0 +1,453 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>PABAON Kare-Kare | Order online</title>
+<meta name="description" content="Order PABAON kare-kare online. Beef tripe, bagnet and the Overload, delivered or for pick up.">
+<meta name="theme-color" content="#EFC52B">
+<meta name="robots" content="noindex">
+<link rel="icon" href="icon-192.png">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fira+Sans:wght@800;900&family=Nunito:wght@700;800&family=Open+Sans:wght@500;600&display=swap" rel="stylesheet">
+<style>
+:root{--y:#EFC52B;--y2:#F7DD7A;--yl:#FFF6D6;--k:#0F0F0F;--k2:#3a3a3a;--mute:#6f6a5e;--paper:#FAF9F6;--card:#fff;--line:#ece7da;--ok:#1f8a4c;--okl:#e6f4ec;--bad:#c62828;--badl:#fdecea;--r:16px;--sh:0 4px 18px rgba(15,15,15,.08)}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{margin:0;padding:0}
+body{background:var(--paper);color:var(--k);font:500 15px/1.5 'Open Sans',system-ui,sans-serif;-webkit-font-smoothing:antialiased;padding-bottom:96px}
+h1,h2,h3{font-family:'Fira Sans',sans-serif;font-weight:900;margin:0;letter-spacing:.2px}
+button,input,select,textarea{font:inherit;color:inherit}
+a{color:var(--k)}
+.top{position:sticky;top:0;z-index:20;background:var(--y);display:flex;align-items:center;gap:10px;padding:8px 16px;padding-top:calc(8px + env(safe-area-inset-top));box-shadow:0 2px 10px rgba(0,0,0,.08)}
+.top img{height:42px;display:block}
+.top nav{margin-left:auto;display:flex;gap:4px}
+.top nav a{font:800 13px 'Nunito',sans-serif;text-decoration:none;padding:7px 11px;border-radius:999px;color:var(--k)}
+.top nav a.on{background:var(--k);color:var(--y)}
+.test{background:var(--k);color:var(--y);text-align:center;font:700 12px 'Nunito',sans-serif;padding:5px 16px;letter-spacing:.4px}
+main{max-width:640px;margin:0 auto;padding:0 16px}
+.hero{position:relative;margin:16px 0 8px;border-radius:22px;overflow:hidden;background:var(--k);min-height:200px;box-shadow:var(--sh)}
+.hero img{width:100%;height:220px;object-fit:cover;display:block;opacity:.92}
+.hero .cap{position:absolute;left:0;right:0;bottom:0;padding:18px 18px 16px;background:linear-gradient(transparent,rgba(0,0,0,.78));color:#fff}
+.hero h1{font-size:28px;line-height:1.05;color:#fff}
+.hero h1 b{color:var(--y)}
+.hero p{margin:6px 0 0;font:700 13.5px 'Nunito',sans-serif;opacity:.95}
+.notice{margin:12px 0;padding:12px 14px;border-radius:12px;background:var(--yl);border:1px solid var(--y2);font-size:13.5px}
+.notice.bad{background:var(--badl);border-color:#f3c4c0;color:var(--bad)}
+.sec{margin:22px 0 10px;display:flex;align-items:baseline;gap:8px}
+.sec h2{font-size:20px}
+.sec span{color:var(--mute);font-size:13px}
+.meal{display:flex;gap:12px;background:var(--card);border-radius:var(--r);box-shadow:var(--sh);padding:10px;margin-bottom:12px;cursor:pointer;border:2px solid transparent;transition:border-color .15s}
+.meal:active{border-color:var(--y)}
+.meal img{width:112px;height:112px;object-fit:cover;border-radius:12px;flex:0 0 112px;background:var(--yl)}
+.meal .info{flex:1;display:flex;flex-direction:column;min-width:0}
+.meal h3{font-size:16.5px;line-height:1.2}
+.meal p{margin:4px 0 0;color:var(--mute);font-size:12.5px;line-height:1.35}
+.meal .row{margin-top:auto;display:flex;align-items:center;justify-content:space-between;padding-top:8px}
+.price{font:900 18px 'Fira Sans',sans-serif}
+.addbtn{background:var(--y);border:0;border-radius:999px;padding:8px 16px;font:800 14px 'Nunito',sans-serif;cursor:pointer}
+.incart{font:800 12px 'Nunito',sans-serif;background:var(--k);color:var(--y);border-radius:999px;padding:3px 9px}
+.list{background:var(--card);border-radius:var(--r);box-shadow:var(--sh);overflow:hidden}
+.li{display:flex;align-items:center;gap:12px;padding:12px 14px;border-bottom:1px solid var(--line)}
+.li:last-child{border-bottom:0}
+.li .nm{flex:1;min-width:0}
+.li .nm b{display:block;font:800 15px 'Nunito',sans-serif}
+.li .nm small{color:var(--mute)}
+.step{display:flex;align-items:center;gap:2px;background:var(--paper);border-radius:999px;border:1px solid var(--line)}
+.step button{width:36px;height:36px;border:0;background:none;font:800 20px 'Nunito',sans-serif;cursor:pointer;border-radius:50%}
+.step button:disabled{opacity:.3}
+.step span{min-width:22px;text-align:center;font:800 15px 'Nunito',sans-serif}
+.bar{position:fixed;left:0;right:0;bottom:0;z-index:30;padding:10px 16px calc(10px + env(safe-area-inset-bottom));background:linear-gradient(transparent,var(--paper) 30%)}
+.bar button{width:100%;max-width:608px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;background:var(--k);color:#fff;border:0;border-radius:16px;padding:15px 18px;font:800 16px 'Nunito',sans-serif;cursor:pointer;box-shadow:0 8px 24px rgba(0,0,0,.25)}
+.bar button .n{background:var(--y);color:var(--k);border-radius:999px;padding:2px 10px;margin-right:8px}
+.bar button:disabled{opacity:.6}
+.sheet-bg{position:fixed;inset:0;background:rgba(0,0,0,.45);z-index:40;display:none}
+.sheet{position:fixed;left:0;right:0;bottom:0;z-index:41;background:var(--paper);border-radius:22px 22px 0 0;max-height:88vh;overflow:auto;padding:0 0 calc(16px + env(safe-area-inset-bottom));transform:translateY(100%);transition:transform .22s ease;max-width:640px;margin:0 auto}
+.sheet.open{transform:none}
+.sheet .ph{height:180px;background:var(--k) center/cover}
+.sheet .bd{padding:16px}
+.sheet h3{font-size:22px}
+.sheet .x{position:absolute;right:12px;top:12px;width:36px;height:36px;border-radius:50%;border:0;background:rgba(255,255,255,.9);font-size:20px;cursor:pointer}
+.card{background:var(--card);border-radius:var(--r);box-shadow:var(--sh);padding:16px;margin:12px 0}
+.card h2{font-size:18px;margin-bottom:10px}
+label.f{display:block;font:800 13px 'Nunito',sans-serif;margin:12px 0 5px}
+label.f small{font:500 12px 'Open Sans',sans-serif;color:var(--mute)}
+input.i,select.i,textarea.i{width:100%;padding:12px 13px;border:1.5px solid var(--line);border-radius:12px;background:#fff;font-size:16px;outline:none}
+input.i:focus,select.i:focus,textarea.i:focus{border-color:var(--y)}
+.seg{display:flex;gap:8px;flex-wrap:wrap}
+.seg button{flex:1 1 auto;padding:11px 12px;border-radius:12px;border:1.5px solid var(--line);background:#fff;font:800 14px 'Nunito',sans-serif;cursor:pointer}
+.seg button.on{background:var(--k);color:var(--y);border-color:var(--k)}
+.seg button:disabled{opacity:.35}
+.days{display:flex;gap:8px;overflow-x:auto;padding-bottom:4px}
+.days button{flex:0 0 auto;padding:9px 13px;border-radius:12px;border:1.5px solid var(--line);background:#fff;font:800 13px 'Nunito',sans-serif;cursor:pointer;text-align:left}
+.days button small{display:block;font:500 11px 'Open Sans',sans-serif;color:var(--mute)}
+.days button.on{background:var(--k);color:var(--y);border-color:var(--k)}
+.days button.on small{color:#ddd}
+.days button:disabled{opacity:.4}
+.sum{width:100%;border-collapse:collapse;font-size:14px}
+.sum td{padding:5px 0;vertical-align:top}
+.sum td:last-child{text-align:right;white-space:nowrap}
+.sum tr.free td{color:var(--ok)}
+.sum tr.tot td{border-top:1.5px dashed var(--line);padding-top:10px;font:900 19px 'Fira Sans',sans-serif}
+.btn{display:block;width:100%;padding:15px;border-radius:14px;border:0;background:var(--y);font:800 16px 'Nunito',sans-serif;cursor:pointer;text-align:center;text-decoration:none;color:var(--k)}
+.btn.dark{background:var(--k);color:var(--y)}
+.btn.line{background:#fff;border:1.5px solid var(--line)}
+.btn:disabled{opacity:.55}
+.err{background:var(--badl);color:var(--bad);border-radius:12px;padding:11px 13px;margin:12px 0;font-size:14px;display:none}
+.okbox{background:var(--okl);color:var(--ok);border-radius:12px;padding:11px 13px;margin:12px 0;font-size:14px}
+.big{font:900 30px 'Fira Sans',sans-serif;letter-spacing:.5px}
+.muted{color:var(--mute);font-size:13px}
+.pay{border:1.5px dashed var(--y);background:var(--yl);border-radius:14px;padding:12px 14px;margin:10px 0}
+.pay b{font-family:'Nunito',sans-serif}
+.tl{list-style:none;margin:6px 0 0;padding:0}
+.tl li{position:relative;padding:0 0 18px 34px;color:var(--mute)}
+.tl li:before{content:'';position:absolute;left:8px;top:4px;width:14px;height:14px;border-radius:50%;background:#fff;border:3px solid var(--line)}
+.tl li:after{content:'';position:absolute;left:15px;top:22px;bottom:0;width:2px;background:var(--line)}
+.tl li:last-child:after{display:none}
+.tl li.done{color:var(--k)}
+.tl li.done:before{background:var(--y);border-color:var(--k)}
+.tl li.done:after{background:var(--k)}
+.tl li b{display:block;font:800 15px 'Nunito',sans-serif}
+.tl li small{font-size:12px}
+.stamps{display:grid;grid-template-columns:repeat(5,1fr);gap:8px;margin:12px 0}
+.stamps div{aspect-ratio:1;border-radius:50%;border:2.5px solid var(--y);display:flex;align-items:center;justify-content:center;font:900 15px 'Fira Sans',sans-serif;color:var(--y)}
+.stamps div.on{background:var(--y);color:var(--k)}
+.prev{max-width:100%;max-height:220px;border-radius:12px;margin-top:10px;display:none}
+.hp{position:absolute;left:-9999px;width:1px;height:1px;overflow:hidden}
+footer{max-width:640px;margin:28px auto 0;padding:0 16px 24px;text-align:center;color:var(--mute);font-size:12.5px}
+footer b{color:var(--k);font-family:'Nunito',sans-serif}
+.center{text-align:center}
+.spin{display:inline-block;width:18px;height:18px;border:3px solid var(--line);border-top-color:var(--k);border-radius:50%;animation:s .8s linear infinite;vertical-align:middle}
+@keyframes s{to{transform:rotate(360deg)}}
+@media(min-width:700px){.hero img{height:280px}.meal img{width:132px;height:132px;flex-basis:132px}}
+</style>
+</head>
+<body>
+<header class="top">
+  <a href="#/" aria-label="PABAON home"><img src="logo.png" alt="PABAON"></a>
+  <nav><a href="#/" data-v="menu">Menu</a><a href="#/track" data-v="track">Track</a><a href="#/stamps" data-v="stamps">Stamps</a></nav>
+</header>
+<div class="test">TEST BUILD. Orders here are for testing only.</div>
+<main id="app"><p class="center" style="padding:60px 0"><span class="spin"></span></p></main>
+<div class="bar" id="bar" style="display:none"><button id="barBtn" onclick="go('#/checkout')"></button></div>
+<div class="sheet-bg" id="sheetBg" onclick="closeSheet()"></div>
+<div class="sheet" id="sheet"></div>
+<footer><b>PABAON</b> by A&amp;D Artisan Foods Corporation<br>A true taste of home, anytime and anywhere.</footer>
+<script>
+var API = 'https://script.google.com/macros/s/AKfycbwQ_bYEnYMgOYjypIycXnMwEfcbKeR602cbx1rRalmejlAQJqjfFRAr9Bis2NYT_Jqang/exec';
+var PHOTO = { 'KK-TRIPE': 'img/kk.jpg', 'KK-BAGNET': 'img/kk.jpg', 'KK-OVER': 'img/hero.jpg', 'KK-BAGOONG': 'img/bagoong.jpg', 'KK-SAUCE': 'img/kk.jpg', 'GULAMAN': 'img/palamig.jpg' };
+var BLURB = {
+  'KK-TRIPE': 'Tender beef tripe in our slow cooked peanut sauce, with vegetables and bagoong.',
+  'KK-BAGNET': 'Crispy bagnet over rich kare-kare sauce, with vegetables and bagoong.',
+  'KK-OVER': 'The best of both. Beef tripe and bagnet in one big serving.'
+};
+var S = null, CART = {}, CO = { fulfillment: 'DELIVERY', payment: '', date: '', time: '' }, PROOF = '';
+
+function $(id){ return document.getElementById(id); }
+function esc(t){ return String(t == null ? '' : t).replace(/[&<>"]/g, function(c){ return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]; }); }
+function peso(n){ return '₱' + Number(n || 0).toLocaleString('en-PH', { minimumFractionDigits: 0, maximumFractionDigits: 2 }); }
+function store(k, v){ try { if (v === undefined) return JSON.parse(localStorage.getItem(k) || 'null'); localStorage.setItem(k, JSON.stringify(v)); } catch (e) { return null; } }
+function go(h){ location.hash = h; }
+
+async function api(body){
+  var r;
+  try {
+    r = await fetch(API, { method: 'POST', headers: { 'Content-Type': 'text/plain;charset=utf-8' }, body: JSON.stringify(body) });
+  } catch (e) {
+    if (body.photo) throw new Error('Network problem. Please try again.');
+    r = await fetch(API + '?api=' + encodeURIComponent(JSON.stringify(body)));
+  }
+  var j = await r.json();
+  if (!j.ok) throw new Error(j.error || 'Something went wrong');
+  return j;
+}
+
+function item(id){ return S.menu.filter(function(m){ return m.id === id; })[0]; }
+function cartLines(){ return Object.keys(CART).filter(function(k){ return CART[k] > 0 && item(k); }).map(function(k){ return { item_id: k, qty: CART[k] }; }); }
+function cartQty(){ return cartLines().reduce(function(a, l){ return a + l.qty; }, 0); }
+function cartFood(){ return cartLines().reduce(function(a, l){ return a + l.qty * item(l.item_id).price; }, 0); }
+function cartMeals(){ return cartLines().reduce(function(a, l){ return a + (item(l.item_id).meal ? l.qty : 0); }, 0); }
+function fee(){ return CO.fulfillment === 'DELIVERY' ? S.delivery_fee : 0; }
+function saveCart(){ store('pb_cart', CART); }
+function setQty(id, q){ CART[id] = Math.max(0, Math.min(S.max_qty, q)); saveCart(); }
+
+function bar(){
+  var n = cartQty(), v = (location.hash || '#/').split('/')[1] || '';
+  var show = n > 0 && (v === '' || v === 'menu');
+  $('bar').style.display = show ? 'block' : 'none';
+  if (show) $('barBtn').innerHTML = '<span><span class="n">' + n + '</span>View cart</span><span>' + peso(cartFood()) + '</span>';
+}
+
+function route(){
+  var parts = (location.hash || '#/').slice(2).split('/'), v = parts[0] || 'menu';
+  document.querySelectorAll('.top nav a').forEach(function(a){ a.classList.toggle('on', a.dataset.v === v || (v === 'checkout' && a.dataset.v === 'menu')); });
+  closeSheet();
+  window.scrollTo(0, 0);
+  if (!S && v !== 'track' && v !== 'stamps') { $('app').innerHTML = '<p class="center" style="padding:60px 0"><span class="spin"></span></p>'; return; }
+  if (v === 'checkout') checkout();
+  else if (v === 'placed') placed();
+  else if (v === 'track') track(parts[1] || '');
+  else if (v === 'stamps') stamps();
+  else menu();
+  bar();
+}
+
+function stepper(id, q, cb){
+  return '<div class="step"><button aria-label="Less" onclick="event.stopPropagation();' + cb + '(\'' + id + '\',-1)"' + (q <= 0 ? ' disabled' : '') + '>&minus;</button><span>' + q + '</span><button aria-label="More" onclick="event.stopPropagation();' + cb + '(\'' + id + '\',1)"' + (q >= S.max_qty ? ' disabled' : '') + '>+</button></div>';
+}
+
+function menu(){
+  var meals = S.menu.filter(function(m){ return m.meal; }), adds = S.menu.filter(function(m){ return !m.meal; });
+  var h = '<section class="hero"><img src="img/hero.jpg" alt="PABAON kare-kare"><div class="cap"><h1>Kare-kare, <b>made the way home tastes.</b></h1><p>Delivered or for pick up. Free bagoong with every meal.</p></div></section>';
+  if (!S.open) h += '<div class="notice bad">We are not taking online orders right now. Please check back soon.</div>';
+  else h += '<div class="notice">Order today before ' + hr12(S.cutoff_hour) + ' for same day, or book up to a few days ahead. Delivery fee ' + peso(S.delivery_fee) + (S.delivery_area ? ' within ' + esc(S.delivery_area) : '') + '.</div>';
+  h += '<div class="sec"><h2>Kare-Kare meals</h2><span>tap to add</span></div>';
+  meals.forEach(function(m){
+    var q = CART[m.id] || 0;
+    h += '<div class="meal" onclick="openMeal(\'' + m.id + '\')"><img src="' + (PHOTO[m.id] || 'img/kk.jpg') + '" alt="" loading="lazy"><div class="info"><h3>' + esc(m.name) + '</h3><p>' + esc(BLURB[m.id] || '') + '</p>'
+      + '<div class="row"><span class="price">' + peso(m.price) + '</span>' + (q ? '<span class="incart">' + q + ' in cart</span>' : '<button class="addbtn">Add</button>') + '</div></div></div>';
+  });
+  h += '<div class="sec"><h2>Add ons and drinks</h2></div><div class="list">';
+  adds.forEach(function(m){
+    h += '<div class="li"><div class="nm"><b>' + esc(m.name) + '</b><small>' + peso(m.price) + '</small></div>' + stepper(m.id, CART[m.id] || 0, 'bump') + '</div>';
+  });
+  h += '</div>';
+  $('app').innerHTML = h;
+}
+function bump(id, d){ setQty(id, (CART[id] || 0) + d); var v = (location.hash || '#/').slice(2).split('/')[0]; if (v === 'checkout') checkout(true); else menu(); bar(); }
+function hr12(h){ h = Number(h); return (h % 12 || 12) + (h >= 12 ? ' PM' : ' AM'); }
+
+var SHEET = {};
+function openMeal(id){
+  var m = item(id), adds = S.menu.filter(function(x){ return !x.meal; });
+  SHEET = { id: id, qty: Math.max(1, CART[id] || 0), adds: {} };
+  var h = '<button class="x" onclick="closeSheet()" aria-label="Close">&times;</button><div class="ph" style="background-image:url(' + (PHOTO[id] || 'img/kk.jpg') + ')"></div><div class="bd">'
+    + '<h3>' + esc(m.name) + '</h3><p class="muted">' + esc(BLURB[id] || '') + ' Comes with 1 free bagoong.</p>'
+    + '<div class="li" style="padding:10px 0"><div class="nm"><b>How many</b><small>' + peso(m.price) + ' each</small></div><div id="sq">' + stepper('main', SHEET.qty, 'sheetBump') + '</div></div>'
+    + '<label class="f">Add ons <small>optional</small></label><div class="list">';
+  adds.forEach(function(a){ h += '<div class="li"><div class="nm"><b>' + esc(a.name) + '</b><small>+' + peso(a.price) + '</small></div><div id="sa_' + a.id + '">' + stepper(a.id, 0, 'sheetBump') + '</div></div>'; });
+  h += '</div><br><button class="btn dark" id="sheetAdd" onclick="sheetAdd()"></button></div>';
+  $('sheet').innerHTML = h; sheetTotal();
+  $('sheetBg').style.display = 'block'; requestAnimationFrame(function(){ $('sheet').classList.add('open'); });
+}
+function sheetBump(id, d){
+  if (id === 'main') { SHEET.qty = Math.max(1, Math.min(S.max_qty, SHEET.qty + d)); $('sq').innerHTML = stepper('main', SHEET.qty, 'sheetBump'); }
+  else { SHEET.adds[id] = Math.max(0, Math.min(S.max_qty, (SHEET.adds[id] || 0) + d)); $('sa_' + id).innerHTML = stepper(id, SHEET.adds[id], 'sheetBump'); }
+  sheetTotal();
+}
+function sheetTotal(){
+  var t = SHEET.qty * item(SHEET.id).price;
+  Object.keys(SHEET.adds).forEach(function(k){ t += SHEET.adds[k] * item(k).price; });
+  $('sheetAdd').textContent = (CART[SHEET.id] ? 'Update cart' : 'Add to cart') + ', ' + peso(t);
+}
+function sheetAdd(){
+  setQty(SHEET.id, SHEET.qty);
+  Object.keys(SHEET.adds).forEach(function(k){ if (SHEET.adds[k]) setQty(k, (CART[k] || 0) + SHEET.adds[k]); });
+  closeSheet(); menu(); bar();
+}
+function closeSheet(){ $('sheet').classList.remove('open'); $('sheetBg').style.display = 'none'; }
+
+function checkout(keep){
+  if (!cartQty()) { $('app').innerHTML = '<div class="card center"><h2>Your cart is empty</h2><p class="muted">Pick your kare-kare first.</p><a class="btn" href="#/">See the menu</a></div>'; return; }
+  var me = store('pb_me') || {};
+  var vals = keep ? grab() : null;
+  var h = '<div class="sec"><h2>Checkout</h2></div><div class="card"><h2>Your order</h2><div class="list" style="box-shadow:none;border:1px solid var(--line)">';
+  cartLines().forEach(function(l){ var m = item(l.item_id); h += '<div class="li"><div class="nm"><b>' + esc(m.name) + '</b><small>' + peso(m.price) + ' each</small></div>' + stepper(m.id, l.qty, 'bump') + '</div>'; });
+  h += '</div><a href="#/" class="muted" style="display:inline-block;margin-top:10px">+ Add more</a></div>';
+  h += '<div class="card"><h2>How do you want it</h2><div class="seg"><button id="fDel" onclick="setF(\'DELIVERY\')">Delivery</button><button id="fPick" onclick="setF(\'PICK UP\')">Pick up</button></div>'
+    + '<div id="pickNote" class="muted" style="margin-top:8px"></div>'
+    + '<label class="f">Date</label><div class="days" id="days"></div>'
+    + '<label class="f">Time</label><select class="i" id="time"></select></div>';
+  h += '<div class="card"><h2>Your details</h2>'
+    + '<label class="f" for="name">Name</label><input class="i" id="name" autocomplete="name" maxlength="60" value="' + esc(me.name || '') + '">'
+    + '<label class="f" for="phone">Mobile number</label><input class="i" id="phone" inputmode="tel" autocomplete="tel" placeholder="09XX XXX XXXX" maxlength="16" value="' + esc(me.phone || '') + '">'
+    + '<div id="addrBox"><label class="f" for="address">Delivery address</label><textarea class="i" id="address" rows="2" autocomplete="street-address" maxlength="200">' + esc(me.address || '') + '</textarea>'
+    + '<label class="f" for="landmark">Landmark <small>helps the rider find you</small></label><input class="i" id="landmark" maxlength="120" value="' + esc(me.landmark || '') + '"></div>'
+    + '<label class="f" for="email">Email <small>optional, for your receipt</small></label><input class="i" id="email" type="email" autocomplete="email" maxlength="80" value="' + esc(me.email || '') + '">'
+    + '<label class="f" for="notes">Notes <small>optional</small></label><textarea class="i" id="notes" rows="2" maxlength="300" placeholder="Less sauce, call when outside, etc."></textarea>'
+    + '<div class="hp" aria-hidden="true"><label>Website<input id="website" tabindex="-1" autocomplete="off"></label></div></div>';
+  h += '<div class="card"><h2>Payment</h2><div class="seg" id="pays"></div><p class="muted" id="payNote" style="margin:8px 0 0"></p></div>';
+  h += '<div class="card"><table class="sum" id="sum"></table><div class="err" id="err"></div><br><button class="btn dark" id="place" onclick="place()">Place order</button>'
+    + '<p class="muted center" style="margin:10px 0 0">You will get an order number to track your order.</p></div>';
+  $('app').innerHTML = h;
+  if (vals) put(vals);
+  setF(CO.fulfillment, true);
+}
+function grab(){ var o = {}; ['name','phone','address','landmark','email','notes','time'].forEach(function(k){ if ($(k)) o[k] = $(k).value; }); return o; }
+function put(o){ Object.keys(o).forEach(function(k){ if ($(k) && k !== 'time') $(k).value = o[k]; }); }
+
+function setF(f, first){
+  CO.fulfillment = f;
+  $('fDel').classList.toggle('on', f === 'DELIVERY'); $('fPick').classList.toggle('on', f === 'PICK UP');
+  $('addrBox').style.display = f === 'DELIVERY' ? 'block' : 'none';
+  $('pickNote').textContent = f === 'PICK UP' ? (S.pickup_address ? 'Pick up at ' + S.pickup_address : 'We will send the pick up spot with your confirmation.') : (S.delivery_area ? 'We deliver within ' + S.delivery_area + '.' : '');
+  if (f !== 'DELIVERY' && CO.payment === 'CASH ON DELIVERY') CO.payment = '';
+  days(); pays(); sum();
+}
+function days(){
+  if (!CO.date || !S.slots.some(function(d){ return d.date === CO.date && d.times.length; })) {
+    var first = S.slots.filter(function(d){ return d.times.length; })[0]; CO.date = first ? first.date : '';
+  }
+  $('days').innerHTML = S.slots.map(function(d){
+    var why = d.full ? 'Fully booked' : !d.times.length ? 'Closed' : d.date.slice(5).replace('-', '/');
+    return '<button ' + (!d.times.length ? 'disabled ' : '') + 'class="' + (d.date === CO.date ? 'on' : '') + '" onclick="CO.date=\'' + d.date + '\';CO.time=\'\';days()">' + esc(d.label) + '<small>' + esc(why) + '</small></button>';
+  }).join('');
+  var day = S.slots.filter(function(d){ return d.date === CO.date; })[0];
+  var times = day ? day.times : [];
+  if (!times.some(function(t){ return t.value === CO.time; })) CO.time = times.length ? times[0].value : '';
+  $('time').innerHTML = times.length ? times.map(function(t){ return '<option value="' + t.value + '"' + (t.value === CO.time ? ' selected' : '') + '>' + esc(t.label) + '</option>'; }).join('') : '<option value="">No open time</option>';
+  $('time').onchange = function(){ CO.time = this.value; };
+}
+function pays(){
+  var list = S.payments.filter(function(p){ return p !== 'CASH ON DELIVERY' || CO.fulfillment === 'DELIVERY'; });
+  var label = { 'GCASH': 'GCash', 'BANK TRANSFER': 'Bank transfer', 'CASH ON DELIVERY': 'Cash on delivery' };
+  $('pays').innerHTML = list.map(function(p){ return '<button class="' + (CO.payment === p ? 'on' : '') + '" onclick="CO.payment=\'' + p + '\';pays()">' + label[p] + '</button>'; }).join('');
+  $('payNote').textContent = CO.payment === 'CASH ON DELIVERY' ? 'Pay the rider in cash. Please prepare the exact amount.' : CO.payment ? 'Send your payment after placing the order, then upload the screenshot. We start cooking once it is confirmed.' : '';
+}
+function sum(){
+  var h = '';
+  cartLines().forEach(function(l){ var m = item(l.item_id); h += '<tr><td>' + l.qty + ' x ' + esc(m.name) + '</td><td>' + peso(l.qty * m.price) + '</td></tr>'; });
+  var meals = cartMeals();
+  if (meals) h += '<tr class="free"><td>' + meals * S.free_side.per_meal + ' x Free bagoong (1 per meal)</td><td>' + peso(0) + '</td></tr>';
+  if (fee()) h += '<tr><td>Delivery fee</td><td>' + peso(fee()) + '</td></tr>';
+  h += '<tr class="tot"><td>Total</td><td>' + peso(cartFood() + fee()) + '</td></tr>';
+  $('sum').innerHTML = h;
+}
+
+async function place(){
+  var e = $('err'); e.style.display = 'none';
+  var v = grab();
+  var fail = !v.name.trim() ? 'Please enter your name' : !/^(\+?63|0)?9\d{9}$/.test(v.phone.replace(/[\s-]/g, '')) ? 'Please enter a valid mobile number, like 0917 123 4567'
+    : CO.fulfillment === 'DELIVERY' && v.address.trim().length < 6 ? 'Please enter your delivery address' : !CO.date || !CO.time ? 'Please pick a date and time' : !CO.payment ? 'Please pick how you will pay' : '';
+  if (fail) { e.textContent = fail; e.style.display = 'block'; return; }
+  var b = $('place'); b.disabled = true; b.innerHTML = '<span class="spin"></span> Placing your order';
+  try {
+    var r = await api({ action: 'place', items: cartLines(), name: v.name, phone: v.phone, email: v.email, fulfillment: CO.fulfillment, address: v.address,
+      landmark: v.landmark, notes: v.notes, date: CO.date, time: CO.time, payment: CO.payment, website: $('website').value });
+    store('pb_me', { name: v.name, phone: v.phone, address: v.address, landmark: v.landmark, email: v.email });
+    store('pb_last', { order_id: r.order_id, phone: v.phone, res: r });
+    CART = {}; saveCart();
+    go('#/placed');
+  } catch (err) {
+    e.textContent = err.message; e.style.display = 'block'; b.disabled = false; b.textContent = 'Place order';
+    refreshStore();
+  }
+}
+
+function payBox(payTo, total){
+  if (!payTo || !payTo.length) return '<div class="pay"><b>How to pay</b><br>We will message you our GCash or bank details for ' + peso(total) + '. Once paid, upload the screenshot below.</div>';
+  return payTo.map(function(p){
+    return '<div class="pay"><b>' + (p.method === 'GCASH' ? 'GCash' : esc(p.bank || 'Bank transfer')) + '</b><br>' + esc(p.name || '') + '<br><span class="big" style="font-size:20px">' + esc(p.number) + '</span></div>';
+  }).join('') + '<p class="muted">Send exactly ' + peso(total) + ', then upload the screenshot below.</p>';
+}
+
+function placed(){
+  var last = store('pb_last');
+  if (!last) { go('#/track'); return; }
+  var r = last.res;
+  var h = '<div class="card center"><p class="muted" style="margin:0">Order placed. Thank you!</p><div class="big">' + esc(r.order_id) + '</div><p class="muted" style="margin:4px 0 0">Keep this number to track your order.</p></div>'
+    + '<div class="card"><table class="sum"><tr><td>Food</td><td>' + peso(r.food) + '</td></tr>' + (r.free_sides ? '<tr class="free"><td>' + r.free_sides + ' x Free bagoong</td><td>' + peso(0) + '</td></tr>' : '')
+    + (r.fee ? '<tr><td>Delivery fee</td><td>' + peso(r.fee) + '</td></tr>' : '') + '<tr class="tot"><td>Total</td><td>' + peso(r.total) + '</td></tr></table>'
+    + '<p class="muted">' + esc(r.slot_label) + ' &middot; ' + esc(r.payment) + '</p></div>';
+  if (r.payment !== 'CASH ON DELIVERY') h += '<div class="card"><h2>Pay and upload your proof</h2>' + payBox(r.pay_to, r.total) + proofForm(r.order_id, last.phone) + '</div>';
+  else h += '<div class="okbox">Cash on delivery. We will confirm your order shortly. Please prepare ' + peso(r.total) + '.</div>';
+  h += '<a class="btn dark" href="#/track/' + encodeURIComponent(r.order_id) + '">Track my order</a>';
+  $('app').innerHTML = h;
+}
+
+function proofForm(id, phone){
+  PROOF = '';
+  return '<label class="f" for="pf">Payment screenshot</label><input class="i" type="file" id="pf" accept="image/*" onchange="pickProof(this)"><img class="prev" id="pprev" alt="">'
+    + '<label class="f" for="pref">Reference number <small>optional</small></label><input class="i" id="pref" maxlength="60">'
+    + '<div class="err" id="perr"></div><br><button class="btn" id="psend" onclick="sendProof(\'' + esc(id) + '\',\'' + esc(phone) + '\')">Send payment proof</button>';
+}
+function pickProof(input){
+  PROOF = '';
+  var f = input.files && input.files[0]; if (!f) return;
+  var img = new Image(), url = URL.createObjectURL(f);
+  img.onload = function(){
+    var max = 1600, s = Math.min(1, max / Math.max(img.width, img.height));
+    var c = document.createElement('canvas'); c.width = Math.round(img.width * s); c.height = Math.round(img.height * s);
+    c.getContext('2d').drawImage(img, 0, 0, c.width, c.height);
+    PROOF = c.toDataURL('image/jpeg', 0.8); $('pprev').src = PROOF; $('pprev').style.display = 'block'; URL.revokeObjectURL(url);
+  };
+  img.onerror = function(){ var e = $('perr'); e.textContent = 'That file is not a photo we can read. Try a screenshot.'; e.style.display = 'block'; };
+  img.src = url;
+}
+async function sendProof(id, phone){
+  var e = $('perr'); e.style.display = 'none';
+  if (!PROOF) { e.textContent = 'Attach the screenshot of your payment first'; e.style.display = 'block'; return; }
+  var b = $('psend'); b.disabled = true; b.innerHTML = '<span class="spin"></span> Sending';
+  try {
+    await api({ action: 'proof', order_id: id, phone: phone, photo: PROOF, reference: $('pref').value });
+    b.parentNode.innerHTML = '<div class="okbox">Payment proof sent. We will confirm it shortly.</div><a class="btn dark" href="#/track/' + encodeURIComponent(id) + '">Track my order</a>';
+  } catch (err) { e.textContent = err.message; e.style.display = 'block'; b.disabled = false; b.textContent = 'Send payment proof'; }
+}
+
+var TRACK_TIMER = null;
+function track(id){
+  clearInterval(TRACK_TIMER);
+  var last = store('pb_last') || {}, me = store('pb_me') || {};
+  id = decodeURIComponent(id || '') || last.order_id || '';
+  var phone = (last.order_id === id && last.phone) || me.phone || '';
+  $('app').innerHTML = '<div class="sec"><h2>Track my order</h2></div><div class="card"><label class="f" for="tid">Order number</label><input class="i" id="tid" placeholder="PB261024-1234" value="' + esc(id) + '" autocapitalize="characters">'
+    + '<label class="f" for="tph">Mobile number used</label><input class="i" id="tph" inputmode="tel" value="' + esc(phone) + '"><div class="err" id="terr"></div><br><button class="btn dark" id="tbtn" onclick="doTrack()">Track</button></div><div id="tout"></div>';
+  if (id && phone) doTrack();
+}
+async function doTrack(quiet){
+  var e = $('terr'); if (!e) return; e.style.display = 'none';
+  var id = $('tid').value.trim(), phone = $('tph').value.trim();
+  if (!id || !phone) { e.textContent = 'Enter your order number and mobile number'; e.style.display = 'block'; return; }
+  if (!quiet) $('tout').innerHTML = '<p class="center"><span class="spin"></span></p>';
+  try {
+    var t = await api({ action: 'track', order_id: id, phone: phone });
+    var h = '<div class="card"><div style="display:flex;justify-content:space-between;align-items:baseline"><b style="font-family:Fira Sans;font-weight:900;font-size:18px">' + esc(t.order_id) + '</b><b>' + peso(t.total) + '</b></div>'
+      + '<p class="muted" style="margin:4px 0 12px">' + esc(t.items) + '<br>' + esc(t.fulfillment) + ', ' + esc(t.slot_label) + '</p>';
+    if (t.cancelled) h += '<div class="err" style="display:block">This order was cancelled' + (t.cancel_reason ? ' (' + esc(t.cancel_reason.toLowerCase()) + ')' : '') + '. Message us if this is a mistake.</div>';
+    else h += '<ul class="tl">' + t.steps.map(function(s){ return '<li class="' + (s.done ? 'done' : '') + '"><b>' + esc(s.label) + '</b><small>' + esc(s.at || '') + '</small></li>'; }).join('') + '</ul>';
+    if (t.ship_ref && !t.cancelled) h += '<p class="muted">Rider or booking ref: ' + esc(t.ship_ref) + '</p>';
+    h += '</div>';
+    if (t.needs_proof) h += '<div class="card"><h2>Pay and upload your proof</h2>' + payBox(t.pay_to, t.total) + proofForm(t.order_id, phone) + '</div>';
+    else if (t.pay_status === 'PROOF SENT') h += '<div class="okbox">We got your payment proof. Waiting for confirmation.</div>';
+    $('tout').innerHTML = h;
+    clearInterval(TRACK_TIMER);
+    if (!t.cancelled && t.fill_status !== 'DELIVERED') TRACK_TIMER = setInterval(function(){ if (!document.hidden && !PROOF && location.hash.indexOf('#/track') === 0) doTrack(true); }, 30000);
+  } catch (err) { if (!quiet) { $('tout').innerHTML = ''; e.textContent = err.message; e.style.display = 'block'; } }
+}
+
+function stamps(){
+  var me = store('pb_me') || {};
+  $('app').innerHTML = '<div class="sec"><h2>My loyalty stamps</h2></div><div class="card"><p class="muted" style="margin-top:0">Collect 5 stamps for a free drink, 15 for a free Kare-Kare Overload.</p>'
+    + '<label class="f" for="sph">Mobile number</label><input class="i" id="sph" inputmode="tel" value="' + esc(me.phone || '') + '"><div class="err" id="serr"></div><br><button class="btn dark" onclick="doStamps()">Check my stamps</button></div><div id="sout"></div>';
+  if (me.phone) doStamps();
+}
+async function doStamps(){
+  var e = $('serr'); e.style.display = 'none';
+  $('sout').innerHTML = '<p class="center"><span class="spin"></span></p>';
+  try {
+    var s = await api({ action: 'stamps', phone: $('sph').value });
+    var h = '<div class="card"><div class="stamps">';
+    for (var i = 1; i <= s.full; i++) h += '<div class="' + (i <= s.stamps ? 'on' : '') + '">' + (i === s.small ? '&#9749;' : i === s.full ? '&#9733;' : i) + '</div>';
+    h += '</div>';
+    h += !s.found ? '<p class="muted">No stamps yet for this number. You earn a stamp with every qualified purchase.</p>'
+      : '<p><b>' + s.stamps + ' stamp' + (s.stamps === 1 ? '' : 's') + '</b>. '
+        + (s.can_full ? 'You can claim a free Kare-Kare Overload!' : s.can_small ? 'You can claim a free drink! ' + s.to_full + ' more to a free Overload.' : s.to_small ? s.to_small + ' more to a free drink.' : s.to_full + ' more to a free Overload.') + '</p>';
+    $('sout').innerHTML = h + '</div>';
+  } catch (err) { $('sout').innerHTML = ''; e.textContent = err.message; e.style.display = 'block'; }
+}
+
+async function refreshStore(){
+  try { S = await api({ action: 'store' }); } catch (e) { if (!S) { $('app').innerHTML = '<div class="card center"><h2>We could not load the menu</h2><p class="muted">' + esc(e.message) + '</p><button class="btn" onclick="boot()">Try again</button></div>'; } return false; }
+  return true;
+}
+async function boot(){
+  CART = store('pb_cart') || {};
+  if (await refreshStore()) route();
+}
+window.addEventListener('hashchange', route);
+route();
+boot();
+</script>
+</body>
+</html>
