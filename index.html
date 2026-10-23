@@ -11,6 +11,8 @@
 <link rel="apple-touch-icon" href="apple-touch-icon.png">
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="preload" as="image" href="img/hero.jpg">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js" defer></script>
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Fira+Sans:wght@800;900&family=Nunito:wght@700;800&family=Open+Sans:wght@500;600&display=swap" rel="stylesheet">
 <style>
@@ -121,6 +123,17 @@ footer b{color:var(--k);font-family:'Nunito',sans-serif}
 .center{text-align:center}
 .spin{display:inline-block;width:18px;height:18px;border:3px solid var(--line);border-top-color:var(--k);border-radius:50%;animation:s .8s linear infinite;vertical-align:middle}
 @keyframes s{to{transform:rotate(360deg)}}
+#map{height:240px;border-radius:12px;margin-top:8px;border:1.5px solid var(--line);z-index:1}
+.maprow{display:flex;gap:8px;margin-top:8px}
+.maprow input{flex:1;min-width:0}
+.maprow button{flex:0 0 auto;padding:0 14px;border-radius:12px;border:1.5px solid var(--line);background:#fff;font:800 13px 'Nunito',sans-serif;cursor:pointer}
+.quote{margin-top:8px;padding:10px 12px;border-radius:12px;background:var(--yl);font-size:13.5px}
+.quote.bad{background:var(--badl);color:var(--bad)}
+.pin{width:26px;height:26px;border-radius:50% 50% 50% 0;background:var(--k);border:3px solid var(--y);transform:rotate(-45deg);box-shadow:0 2px 6px rgba(0,0,0,.4)}
+.qr{display:flex;gap:12px;align-items:center}
+.qr img{width:132px;height:132px;border-radius:10px;background:#fff;padding:4px;flex:0 0 132px}
+.layout2{display:block}
+@media(min-width:960px){main{max-width:980px}.layout2{display:grid;grid-template-columns:1.15fr .85fr;gap:20px;align-items:start}.layout2 .side{position:sticky;top:84px}.meals{display:grid;grid-template-columns:1fr 1fr;gap:12px}.meals .meal{margin:0}}
 @media(min-width:700px){.hero img{height:280px}.meal img{width:132px;height:132px;flex-basis:132px}}
 </style>
 </head>
@@ -169,7 +182,7 @@ function cartLines(){ return Object.keys(CART).filter(function(k){ return CART[k
 function cartQty(){ return cartLines().reduce(function(a, l){ return a + l.qty; }, 0); }
 function cartFood(){ return cartLines().reduce(function(a, l){ return a + l.qty * item(l.item_id).price; }, 0); }
 function cartMeals(){ return cartLines().reduce(function(a, l){ return a + (item(l.item_id).meal ? l.qty : 0); }, 0); }
-function fee(){ return CO.fulfillment === 'DELIVERY' ? S.delivery_fee : 0; }
+function fee(){ return CO.fulfillment === 'DELIVERY' ? (CO.quote ? CO.quote.fee : 0) : 0; }
 function saveCart(){ store('pb_cart', CART); }
 function setQty(id, q){ CART[id] = Math.max(0, Math.min(S.max_qty, q)); saveCart(); }
 
@@ -202,14 +215,14 @@ function menu(){
   var meals = S.menu.filter(function(m){ return m.meal; }), adds = S.menu.filter(function(m){ return !m.meal; });
   var h = '<section class="hero"><img src="img/hero.jpg" alt="PABAON kare-kare"><div class="cap"><h1>Kare-kare, <b>made the way home tastes.</b></h1><p>Delivered or for pick up. Free bagoong with every meal.</p></div></section>';
   if (!S.open) h += '<div class="notice bad">We are not taking online orders right now. Please check back soon.</div>';
-  else h += '<div class="notice">Order today before ' + hr12(S.cutoff_hour) + ' for same day, or book up to a few days ahead. Delivery fee ' + peso(S.delivery_fee) + (S.delivery_area ? ' within ' + esc(S.delivery_area) : '') + '.</div>';
-  h += '<div class="sec"><h2>Kare-Kare meals</h2><span>tap to add</span></div>';
+  else h += '<div class="notice">Open ' + hr12(Number(String(S.slots[1] && S.slots[1].times[0] ? S.slots[1].times[0].value : '10').slice(0,2))) + ' to 9 PM. Order at least an hour ahead, or book up to a few days ahead. Delivery ' + peso(S.fee_rule.first) + ' for the first km, plus ' + peso(S.fee_rule.per) + ' per km after' + (S.delivery_area ? ', ' + esc(S.delivery_area) : '') + '.</div>';
+  h += '<div class="sec"><h2>Kare-Kare meals</h2><span>tap to add</span></div><div class="meals">';
   meals.forEach(function(m){
     var q = CART[m.id] || 0;
     h += '<div class="meal" onclick="openMeal(\'' + m.id + '\')"><img src="' + (PHOTO[m.id] || 'img/kk.jpg') + '" alt="" loading="lazy"><div class="info"><h3>' + esc(m.name) + '</h3><p>' + esc(BLURB[m.id] || '') + '</p>'
       + '<div class="row"><span class="price">' + peso(m.price) + '</span>' + (q ? '<span class="incart">' + q + ' in cart</span>' : '<button class="addbtn">Add</button>') + '</div></div></div>';
   });
-  h += '<div class="sec"><h2>Add ons and drinks</h2></div><div class="list">';
+  h += '</div><div class="sec"><h2>Add ons and drinks</h2></div><div class="list">';
   adds.forEach(function(m){
     h += '<div class="li"><div class="nm"><b>' + esc(m.name) + '</b><small>' + peso(m.price) + '</small></div>' + stepper(m.id, CART[m.id] || 0, 'bump') + '</div>';
   });
@@ -253,7 +266,7 @@ function checkout(keep){
   if (!cartQty()) { $('app').innerHTML = '<div class="card center"><h2>Your cart is empty</h2><p class="muted">Pick your kare-kare first.</p><a class="btn" href="#/">See the menu</a></div>'; return; }
   var me = store('pb_me') || {};
   var vals = keep ? grab() : null;
-  var h = '<div class="sec"><h2>Checkout</h2></div><div class="card"><h2>Your order</h2><div class="list" style="box-shadow:none;border:1px solid var(--line)">';
+  var h = '<div class="sec"><h2>Checkout</h2></div><div class="layout2"><div class="main"><div class="card"><h2>Your order</h2><div class="list" style="box-shadow:none;border:1px solid var(--line)">';
   cartLines().forEach(function(l){ var m = item(l.item_id); h += '<div class="li"><div class="nm"><b>' + esc(m.name) + '</b><small>' + peso(m.price) + ' each</small></div>' + stepper(m.id, l.qty, 'bump') + '</div>'; });
   h += '</div><a href="#/" class="muted" style="display:inline-block;margin-top:10px">+ Add more</a></div>';
   h += '<div class="card"><h2>How do you want it</h2><div class="seg"><button id="fDel" onclick="setF(\'DELIVERY\')">Delivery</button><button id="fPick" onclick="setF(\'PICK UP\')">Pick up</button></div>'
@@ -264,13 +277,16 @@ function checkout(keep){
     + '<label class="f" for="name">Name</label><input class="i" id="name" autocomplete="name" maxlength="60" value="' + esc(me.name || '') + '">'
     + '<label class="f" for="phone">Mobile number</label><input class="i" id="phone" inputmode="tel" autocomplete="tel" placeholder="09XX XXX XXXX" maxlength="16" value="' + esc(me.phone || '') + '">'
     + '<div id="addrBox"><label class="f" for="address">Delivery address</label><textarea class="i" id="address" rows="2" autocomplete="street-address" maxlength="200">' + esc(me.address || '') + '</textarea>'
-    + '<label class="f" for="landmark">Landmark <small>helps the rider find you</small></label><input class="i" id="landmark" maxlength="120" value="' + esc(me.landmark || '') + '"></div>'
+    + '<label class="f" for="landmark">Landmark <small>helps the rider find you</small></label><input class="i" id="landmark" maxlength="120" value="' + esc(me.landmark || '') + '">'
+    + '<label class="f">Pin your location <small>sets the delivery fee</small></label>'
+    + '<div class="maprow"><input class="i" id="msearch" placeholder="Search street or barangay" onkeydown="if(event.key===\'Enter\'){event.preventDefault();mapSearch()}"><button type="button" onclick="mapSearch()">Find</button><button type="button" onclick="locateMe()">&#9673; Me</button></div>'
+    + '<div id="map"></div><div class="quote" id="quote">Tap the map or drag the pin to your door.</div></div>'
     + '<label class="f" for="email">Email <small>optional, for your receipt</small></label><input class="i" id="email" type="email" autocomplete="email" maxlength="80" value="' + esc(me.email || '') + '">'
     + '<label class="f" for="notes">Notes <small>optional</small></label><textarea class="i" id="notes" rows="2" maxlength="300" placeholder="Less sauce, call when outside, etc."></textarea>'
     + '<div class="hp" aria-hidden="true"><label>Website<input id="website" tabindex="-1" autocomplete="off"></label></div></div>';
   h += '<div class="card"><h2>Payment</h2><div class="seg" id="pays"></div><p class="muted" id="payNote" style="margin:8px 0 0"></p></div>';
-  h += '<div class="card"><table class="sum" id="sum"></table><div class="err" id="err"></div><br><button class="btn dark" id="place" onclick="place()">Place order</button>'
-    + '<p class="muted center" style="margin:10px 0 0">You will get an order number to track your order.</p></div>';
+  h += '</div><div class="side"><div class="card"><table class="sum" id="sum"></table><div class="err" id="err"></div><br><button class="btn dark" id="place" onclick="place()">Place order</button>'
+    + '<p class="muted center" style="margin:10px 0 0">You will get an order number to track your order.</p></div></div></div>';
   $('app').innerHTML = h;
   if (vals) put(vals);
   setF(CO.fulfillment, true);
@@ -285,6 +301,60 @@ function setF(f, first){
   $('pickNote').textContent = f === 'PICK UP' ? (S.pickup_address ? 'Pick up at ' + S.pickup_address : 'We will send the pick up spot with your confirmation.') : (S.delivery_area ? 'We deliver within ' + S.delivery_area + '.' : '');
   if (f !== 'DELIVERY' && CO.payment === 'CASH ON DELIVERY') CO.payment = '';
   days(); pays(); sum();
+  if (f === 'DELIVERY') initMap();
+}
+
+var MAP = null, PIN = null;
+function initMap(){
+  if (!window.L) { setTimeout(initMap, 300); return; }
+  var el = $('map'); if (!el) return;
+  if (MAP && MAP.getContainer() !== el) { MAP.remove(); MAP = null; PIN = null; }
+  var o = S.origins[0] || { lat: 14.6308, lng: 120.9744 };
+  var start = CO.quote ? [CO.quote.lat, CO.quote.lng] : (store('pb_me') || {}).pin || null;
+  if (!MAP) {
+    MAP = L.map(el, { zoomControl: true, attributionControl: true }).setView(start || [o.lat, o.lng], start ? 17 : 15);
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', { maxZoom: 19, attribution: '&copy; OpenStreetMap' }).addTo(MAP);
+    MAP.on('click', function(e){ setPin(e.latlng.lat, e.latlng.lng); });
+    if (start) setPin(start[0], start[1]);
+  }
+  setTimeout(function(){ MAP.invalidateSize(); }, 150);
+}
+function setPin(lat, lng){
+  var icon = L.divIcon({ className: '', html: '<div class="pin"></div>', iconSize: [26, 26], iconAnchor: [13, 30] });
+  if (!PIN) { PIN = L.marker([lat, lng], { draggable: true, icon: icon }).addTo(MAP); PIN.on('dragend', function(){ var p = PIN.getLatLng(); quote(p.lat, p.lng); }); }
+  else PIN.setLatLng([lat, lng]);
+  quote(lat, lng);
+}
+var QSEQ = 0;
+async function quote(lat, lng){
+  var q = $('quote'), me = ++QSEQ; CO.quote = null; sum();
+  q.className = 'quote'; q.innerHTML = '<span class="spin"></span> Measuring the distance';
+  var roads = await Promise.all(S.origins.map(function(o){
+    return fetch('https://router.project-osrm.org/route/v1/driving/' + o.lng + ',' + o.lat + ';' + lng + ',' + lat + '?overview=false')
+      .then(function(r){ return r.json(); }).then(function(j){ return j.code === 'Ok' ? j.routes[0].distance : 0; }).catch(function(){ return 0; });
+  }));
+  try {
+    var r = await api({ action: 'quote', lat: lat, lng: lng, roads: roads });
+    if (me !== QSEQ) return;
+    r.roads = roads; CO.quote = r;
+    var m = store('pb_me') || {}; m.pin = [lat, lng]; store('pb_me', m);
+    q.innerHTML = '<b>' + r.exact_km + ' km</b> from our ' + esc(r.from) + ' pwesto, charged as ' + r.km + ' km. Delivery <b>' + peso(r.fee) + '</b>';
+  } catch (e) { if (me !== QSEQ) return; q.className = 'quote bad'; q.textContent = e.message; }
+  sum();
+}
+async function mapSearch(){
+  var t = $('msearch').value.trim(); if (!t) return;
+  try {
+    var r = await (await fetch('https://nominatim.openstreetmap.org/search?format=json&limit=1&countrycodes=ph&viewbox=120.90,14.70,121.10,14.52&q=' + encodeURIComponent(t + ', Manila'))).json();
+    if (!r.length) { $('quote').className = 'quote bad'; $('quote').textContent = 'Could not find that place. Tap the map instead.'; return; }
+    MAP.setView([+r[0].lat, +r[0].lon], 17); setPin(+r[0].lat, +r[0].lon);
+  } catch (e) { $('quote').className = 'quote bad'; $('quote').textContent = 'Search is not available right now. Tap the map instead.'; }
+}
+function locateMe(){
+  if (!navigator.geolocation) return;
+  $('quote').innerHTML = '<span class="spin"></span> Finding you';
+  navigator.geolocation.getCurrentPosition(function(p){ MAP.setView([p.coords.latitude, p.coords.longitude], 17); setPin(p.coords.latitude, p.coords.longitude); },
+    function(){ $('quote').className = 'quote bad'; $('quote').textContent = 'Location is off. Tap the map instead.'; }, { enableHighAccuracy: true, timeout: 10000 });
 }
 function days(){
   if (!CO.date || !S.slots.some(function(d){ return d.date === CO.date && d.times.length; })) {
@@ -311,7 +381,7 @@ function sum(){
   cartLines().forEach(function(l){ var m = item(l.item_id); h += '<tr><td>' + l.qty + ' x ' + esc(m.name) + '</td><td>' + peso(l.qty * m.price) + '</td></tr>'; });
   var meals = cartMeals();
   if (meals) h += '<tr class="free"><td>' + meals * S.free_side.per_meal + ' x Free bagoong (1 per meal)</td><td>' + peso(0) + '</td></tr>';
-  if (fee()) h += '<tr><td>Delivery fee</td><td>' + peso(fee()) + '</td></tr>';
+  if (CO.fulfillment === 'DELIVERY') h += '<tr><td>Delivery fee' + (CO.quote ? ' (' + CO.quote.km + ' km)' : '') + '</td><td>' + (CO.quote ? peso(CO.quote.fee) : 'pin your location') + '</td></tr>';
   h += '<tr class="tot"><td>Total</td><td>' + peso(cartFood() + fee()) + '</td></tr>';
   $('sum').innerHTML = h;
 }
@@ -320,12 +390,13 @@ async function place(){
   var e = $('err'); e.style.display = 'none';
   var v = grab();
   var fail = !v.name.trim() ? 'Please enter your name' : !/^(\+?63|0)?9\d{9}$/.test(v.phone.replace(/[\s-]/g, '')) ? 'Please enter a valid mobile number, like 0917 123 4567'
-    : CO.fulfillment === 'DELIVERY' && v.address.trim().length < 6 ? 'Please enter your delivery address' : !CO.date || !CO.time ? 'Please pick a date and time' : !CO.payment ? 'Please pick how you will pay' : '';
+    : CO.fulfillment === 'DELIVERY' && v.address.trim().length < 6 ? 'Please enter your delivery address' : CO.fulfillment === 'DELIVERY' && !CO.quote ? 'Please pin your location on the map so we can compute the delivery fee' : !CO.date || !CO.time ? 'Please pick a date and time' : !CO.payment ? 'Please pick how you will pay' : '';
   if (fail) { e.textContent = fail; e.style.display = 'block'; return; }
   var b = $('place'); b.disabled = true; b.innerHTML = '<span class="spin"></span> Placing your order';
   try {
     var r = await api({ action: 'place', items: cartLines(), name: v.name, phone: v.phone, email: v.email, fulfillment: CO.fulfillment, address: v.address,
-      landmark: v.landmark, notes: v.notes, date: CO.date, time: CO.time, payment: CO.payment, website: $('website').value });
+      landmark: v.landmark, notes: v.notes, date: CO.date, time: CO.time, payment: CO.payment, website: $('website').value,
+      lat: CO.quote ? CO.quote.lat : '', lng: CO.quote ? CO.quote.lng : '', roads: CO.quote ? CO.quote.roads : [] });
     store('pb_me', { name: v.name, phone: v.phone, address: v.address, landmark: v.landmark, email: v.email });
     store('pb_last', { order_id: r.order_id, phone: v.phone, res: r });
     CART = {}; saveCart();
@@ -339,8 +410,9 @@ async function place(){
 function payBox(payTo, total){
   if (!payTo || !payTo.length) return '<div class="pay"><b>How to pay</b><br>We will message you our GCash or bank details for ' + peso(total) + '. Once paid, upload the screenshot below.</div>';
   return payTo.map(function(p){
-    return '<div class="pay"><b>' + (p.method === 'GCASH' ? 'GCash' : esc(p.bank || 'Bank transfer')) + '</b><br>' + esc(p.name || '') + '<br><span class="big" style="font-size:20px">' + esc(p.number) + '</span></div>';
-  }).join('') + '<p class="muted">Send exactly ' + peso(total) + ', then upload the screenshot below.</p>';
+    return '<div class="pay qr">' + (p.qr ? '<img src="' + esc(p.qr) + '" alt="' + esc(p.method) + ' QR">' : '') + '<div><b>' + (p.method === 'GCASH' ? 'GCash' : esc(p.bank || 'Bank transfer')) + '</b><br>' + esc(p.name || '')
+      + (p.number ? '<br><span style="font:900 17px Fira Sans,sans-serif;letter-spacing:.5px">' + esc(p.number) + '</span>' : '') + '<br><small class="muted">Save the QR, then in your app tap Scan QR, Upload QR.</small></div></div>';
+  }).join('') + '<p class="muted">Send exactly <b>' + peso(total) + '</b>, then upload the screenshot below.</p>';
 }
 
 function placed(){
