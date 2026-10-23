@@ -10,6 +10,7 @@
 <link rel="icon" href="icon-192.png">
 <link rel="apple-touch-icon" href="apple-touch-icon.png">
 <link rel="manifest" href="manifest.webmanifest">
+<link rel="preload" as="image" href="img/hero.jpg">
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Fira+Sans:wght@800;900&family=Nunito:wght@700;800&family=Open+Sans:wght@500;600&display=swap" rel="stylesheet">
 <style>
@@ -27,7 +28,7 @@ a{color:var(--k)}
 .top nav a.on{background:var(--y);color:var(--k)}
 .test{background:var(--y);color:var(--k);text-align:center;font:700 12px 'Nunito',sans-serif;padding:5px 16px;letter-spacing:.4px}
 main{max-width:640px;margin:0 auto;padding:0 16px}
-.hero{position:relative;margin:16px 0 8px;border-radius:22px;overflow:hidden;background:var(--k);min-height:200px;box-shadow:var(--sh)}
+.hero{position:relative;margin:16px 0 8px;border-radius:22px;overflow:hidden;background:linear-gradient(135deg,#3a2a12,#0F0F0F);min-height:200px;box-shadow:var(--sh)}
 .hero img{width:100%;height:220px;object-fit:cover;display:block;opacity:.92}
 .hero .cap{position:absolute;left:0;right:0;bottom:0;padding:18px 18px 16px;background:linear-gradient(transparent,rgba(0,0,0,.78));color:#fff}
 .hero h1{font-size:28px;line-height:1.05;color:#fff}
@@ -129,7 +130,7 @@ footer b{color:var(--k);font-family:'Nunito',sans-serif}
   <nav><a href="#/" data-v="menu">Menu</a><a href="#/track" data-v="track">Track</a><a href="#/stamps" data-v="stamps">Stamps</a></nav>
 </header>
 <div class="test">TEST BUILD. Orders here are for testing only.</div>
-<main id="app"><p class="center" style="padding:60px 0"><span class="spin"></span></p></main>
+<main id="app"><section class="hero"><img src="img/hero.jpg" alt="PABAON kare-kare"><div class="cap"><h1>Kare-kare, <b>made the way home tastes.</b></h1><p>Delivered or for pick up. Free bagoong with every meal.</p></div></section><p class="center" style="padding:30px 0"><span class="spin"></span></p></main>
 <div class="bar" id="bar" style="display:none"><button id="barBtn" onclick="go('#/checkout')"></button></div>
 <div class="sheet-bg" id="sheetBg" onclick="closeSheet()"></div>
 <div class="sheet" id="sheet"></div>
@@ -184,7 +185,7 @@ function route(){
   document.querySelectorAll('.top nav a').forEach(function(a){ a.classList.toggle('on', a.dataset.v === v || (v === 'checkout' && a.dataset.v === 'menu')); });
   closeSheet();
   window.scrollTo(0, 0);
-  if (!S && v !== 'track' && v !== 'stamps') { $('app').innerHTML = '<p class="center" style="padding:60px 0"><span class="spin"></span></p>'; return; }
+  if (!S && v !== 'track' && v !== 'stamps') return;
   if (v === 'checkout') checkout();
   else if (v === 'placed') placed();
   else if (v === 'track') track(parts[1] || '');
@@ -438,12 +439,19 @@ async function doStamps(){
 }
 
 async function refreshStore(){
-  try { S = await api({ action: 'store' }); } catch (e) { if (!S) { $('app').innerHTML = '<div class="card center"><h2>We could not load the menu</h2><p class="muted">' + esc(e.message) + '</p><button class="btn" onclick="boot()">Try again</button></div>'; } return false; }
+  try { S = await api({ action: 'store' }); store('pb_store', S); } catch (e) { if (!S) { $('app').innerHTML = '<div class="card center"><h2>We could not load the menu</h2><p class="muted">' + esc(e.message) + '</p><button class="btn" onclick="boot()">Try again</button></div>'; } return false; }
   return true;
 }
+/** Last menu kept on the phone so a returning customer sees it at once; fresh slots and prices replace it a moment later. */
 async function boot(){
   CART = store('pb_cart') || {};
-  if (await refreshStore()) route();
+  var cached = store('pb_store');
+  if (cached && cached.menu) { S = cached; route(); }
+  if (await refreshStore()) {
+    var v = (location.hash || '#/').slice(2).split('/')[0];
+    if (!cached || v === '' || v === 'menu') route();
+    else if (v === 'checkout' && $('days')) { days(); pays(); sum(); }
+  }
 }
 window.addEventListener('hashchange', route);
 route();
