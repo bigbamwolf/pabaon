@@ -219,7 +219,7 @@ function menu(){
   h += '<div class="sec"><h2>Kare-Kare meals</h2><span>tap to add</span></div><div class="meals">';
   meals.forEach(function(m){
     var q = CART[m.id] || 0;
-    h += '<div class="meal" onclick="openMeal(\'' + m.id + '\')"><img src="' + (PHOTO[m.id] || 'img/kk.jpg') + '" alt="" loading="lazy"><div class="info"><h3>' + esc(m.name) + '</h3><p>' + esc(BLURB[m.id] || '') + '</p>'
+    h += '<div class="meal" onclick="openMeal(\'' + m.id + '\')"><img src="' + (PHOTO[m.id] || 'img/kk.jpg') + '" alt=""><div class="info"><h3>' + esc(m.name) + '</h3><p>' + esc(BLURB[m.id] || '') + '</p>'
       + '<div class="row"><span class="price">' + peso(m.price) + '</span>' + (q ? '<span class="incart">' + q + ' in cart</span>' : '<button class="addbtn">Add</button>') + '</div></div></div>';
   });
   h += '</div><div class="sec"><h2>Add ons and drinks</h2></div><div class="list">';
