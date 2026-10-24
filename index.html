@@ -4,11 +4,11 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>PABAON Kare-Kare | Order online</title>
-<meta name="description" content="Order PABAON kare-kare online. Beef tripe, bagnet and the Overload, delivered or for pick up.">
+<meta name="description" content="Order PABAON kare-kare online. Bagnet, beef tripe and the Special, delivered or for pick up.">
 <meta name="theme-color" content="#0F0F0F">
 <meta property="og:type" content="website">
 <meta property="og:title" content="PABAON Kare-Kare | Order online">
-<meta property="og:description" content="Kare-kare with beef tripe, bagnet or the Overload. Delivered around Tondo or for pick up. Free bagoong with every meal.">
+<meta property="og:description" content="Kare-kare with bagnet, beef tripe or the Special. Delivered around Tondo or for pick up. Free bagoong with every meal.">
 <meta property="og:image" content="https://bigbamwolf.github.io/pabaon/img/hero.jpg">
 <meta property="og:url" content="https://bigbamwolf.github.io/pabaon/">
 <link rel="icon" href="icon-192.png">
@@ -20,7 +20,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Fira+Sans:wght@800;900&family=Nunito:wght@700;800&family=Open+Sans:wght@500;600&display=swap" rel="stylesheet">
 <style>
-:root{--y:#EFC52B;--y2:#F7DD7A;--yl:#FFF6D6;--k:#0F0F0F;--k2:#3a3a3a;--mute:#6f6a5e;--paper:#FAF9F6;--card:#fff;--line:#ece7da;--ok:#1f8a4c;--okl:#e6f4ec;--bad:#c62828;--badl:#fdecea;--r:16px;--sh:0 4px 18px rgba(15,15,15,.08)}
+:root{--red:#C8102E;--y:#EFC52B;--y2:#F7DD7A;--yl:#FFF6D6;--k:#0F0F0F;--k2:#3a3a3a;--mute:#6f6a5e;--paper:#FAF9F6;--card:#fff;--line:#ece7da;--ok:#1f8a4c;--okl:#e6f4ec;--bad:#c62828;--badl:#fdecea;--r:16px;--sh:0 4px 18px rgba(15,15,15,.08)}
 *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
 html,body{margin:0;padding:0}
 body{background:var(--paper);color:var(--k);font:500 15px/1.5 'Open Sans',system-ui,sans-serif;-webkit-font-smoothing:antialiased;padding-bottom:96px}
@@ -52,7 +52,24 @@ main{max-width:640px;margin:0 auto;padding:0 16px}
 .meal h3{font-size:16.5px;line-height:1.2}
 .meal p{margin:4px 0 0;color:var(--mute);font-size:12.5px;line-height:1.35}
 .meal .row{margin-top:auto;display:flex;align-items:center;justify-content:space-between;padding-top:8px}
-.price{font:900 18px 'Fira Sans',sans-serif}
+.price{font:900 18px 'Fira Sans',sans-serif;color:var(--red)}
+.badge{display:inline-block;font:800 10.5px 'Nunito',sans-serif;letter-spacing:.4px;text-transform:uppercase;border-radius:6px;padding:2px 7px;margin-bottom:4px}
+.badge.hot{background:var(--red);color:#fff}.badge.sulit{background:var(--y);color:var(--k)}.badge.budget{background:var(--k);color:var(--y)}
+.serves{display:inline-block;margin-top:4px;font:700 11.5px 'Nunito',sans-serif;color:var(--k2)}
+.promos{display:flex;gap:10px;overflow-x:auto;scroll-snap-type:x mandatory;margin:12px -16px 4px;padding:0 16px 6px;-webkit-overflow-scrolling:touch;scrollbar-width:none}
+.promos::-webkit-scrollbar{display:none}
+.promo{flex:0 0 86%;max-width:420px;scroll-snap-align:start;border-radius:18px;padding:16px 16px 14px;color:#fff;position:relative;overflow:hidden;min-height:118px}
+.promo b{display:block;font:900 22px/1.05 'Fira Sans',sans-serif}
+.promo p{margin:6px 0 0;font:700 13px 'Nunito',sans-serif;opacity:.95;max-width:75%}
+.promo .tag{position:absolute;right:12px;top:12px;background:#fff;color:var(--red);border-radius:999px;padding:4px 10px;font:900 12px 'Fira Sans',sans-serif}
+.promo.red{background:linear-gradient(135deg,#C8102E,#8E0B20)}.promo.dark{background:linear-gradient(135deg,#1d1d1d,#3a2a12)}.promo.gold{background:linear-gradient(135deg,#EFC52B,#d9a400);color:var(--k)}
+.promo.gold .tag{color:var(--k)}
+.rev{flex:0 0 78%;max-width:360px;scroll-snap-align:start;background:#fff;border-radius:16px;box-shadow:var(--sh);overflow:hidden}
+.rev img{width:100%;height:150px;object-fit:cover;display:block}
+.rev div{padding:12px 14px}
+.rev .st{color:var(--y);letter-spacing:1px}
+.rev q{display:block;font-size:13.5px;margin:4px 0 6px;quotes:none}
+.rev small{color:var(--mute);font-weight:700}
 .addbtn{background:var(--y);border:0;border-radius:999px;padding:8px 16px;font:800 14px 'Nunito',sans-serif;cursor:pointer}
 .incart{font:800 12px 'Nunito',sans-serif;background:var(--k);color:var(--y);border-radius:999px;padding:3px 9px}
 .list{background:var(--card);border-radius:var(--r);box-shadow:var(--sh);overflow:hidden}
@@ -159,8 +176,11 @@ var PHOTO = { 'KK-TRIPE': 'img/kk.jpg', 'KK-BAGNET': 'img/kk.jpg', 'KK-OVER': 'i
 var BLURB = {
   'KK-TRIPE': 'Tender beef tripe in our slow cooked peanut sauce, with vegetables and bagoong.',
   'KK-BAGNET': 'Crispy bagnet over rich kare-kare sauce, with vegetables and bagoong.',
-  'KK-OVER': 'The best of both. Beef tripe and bagnet in one big serving.'
+  'KK-OVER': 'The best of both. Bagnet and twalya (beef tripe) in one big serving.'
 };
+var BADGE = { 'KK-BAGNET': ['Best seller', 'hot'], 'KK-OVER': ['Sulit meal', 'sulit'], 'KK-TRIPE': ['Budget friendly', 'budget'] };
+var ORDER = ['KK-BAGNET', 'KK-OVER', 'KK-TRIPE'];
+var SERVES = 'Good for 2 to 3';
 var S = null, CART = {}, CO = { fulfillment: 'DELIVERY', payment: '', date: '', time: '' }, PROOF = '';
 
 function $(id){ return document.getElementById(id); }
@@ -217,22 +237,37 @@ function stepper(id, q, cb){
 }
 
 function menu(){
-  var meals = S.menu.filter(function(m){ return m.meal; }), adds = S.menu.filter(function(m){ return !m.meal; });
-  var h = '<section class="hero"><img src="img/hero.jpg" alt="PABAON kare-kare"><div class="cap"><h1>Kare-kare, <b>made the way home tastes.</b></h1><p>Delivered or for pick up. Free bagoong with every meal.</p></div></section>';
+  var meals = S.menu.filter(function(m){ return m.meal; }).sort(function(a, b){ return (ORDER.indexOf(a.id) + 99) % 99 - (ORDER.indexOf(b.id) + 99) % 99; }), adds = S.menu.filter(function(m){ return !m.meal; });
+  var h = promos() + '<section class="hero"><img src="img/hero.jpg" alt="PABAON kare-kare"><div class="cap"><h1>Kare-kare, <b>made the way home tastes.</b></h1><p>Delivered or for pick up. Free bagoong with every meal.</p></div></section>';
   if (!S.open) h += '<div class="notice bad">We are not taking online orders right now. Please check back soon.</div>';
   else h += '<div class="notice">Open ' + hr12(Number(String(S.slots[1] && S.slots[1].times[0] ? S.slots[1].times[0].value : '10').slice(0,2))) + ' to 9 PM. Order at least an hour ahead, or book up to a few days ahead. Delivery ' + peso(S.fee_rule.first) + ' for the first km, plus ' + peso(S.fee_rule.per) + ' per km after' + (S.delivery_area ? ', ' + esc(S.delivery_area) : '') + '.</div>';
   h += '<div class="sec"><h2>Kare-Kare meals</h2><span>tap to add</span></div><div class="meals">';
   meals.forEach(function(m){
     var q = CART[m.id] || 0;
-    h += '<div class="meal" onclick="openMeal(\'' + m.id + '\')"><img src="' + (PHOTO[m.id] || 'img/kk.jpg') + '" alt=""><div class="info"><h3>' + esc(m.name) + '</h3><p>' + esc(BLURB[m.id] || '') + '</p>'
+    h += '<div class="meal" onclick="openMeal(\'' + m.id + '\')"><img src="' + (PHOTO[m.id] || 'img/kk.jpg') + '" alt=""><div class="info">' + (BADGE[m.id] ? '<span class="badge ' + BADGE[m.id][1] + '">' + BADGE[m.id][0] + '</span>' : '') + '<h3>' + esc(m.name) + '</h3><p>' + esc(BLURB[m.id] || '') + '</p><span class="serves">&#128101; ' + SERVES + '</span>'
       + '<div class="row"><span class="price">' + peso(m.price) + '</span>' + (q ? '<span class="incart">' + q + ' in cart</span>' : '<button class="addbtn">Add</button>') + '</div></div></div>';
   });
-  h += '</div><div class="sec"><h2>Add ons and drinks</h2></div><div class="list">';
+  h += '</div>' + reviews('ALL') + '<div class="sec"><h2>Add ons and drinks</h2></div><div class="list">';
   adds.forEach(function(m){
     h += '<div class="li"><div class="nm"><b>' + esc(m.name) + '</b><small>' + peso(m.price) + '</small></div>' + stepper(m.id, CART[m.id] || 0, 'bump') + '</div>';
   });
   h += '</div>';
   $('app').innerHTML = h;
+}
+function promos(){
+  var p = [];
+  var d = S.free_drink || {};
+  if (d.per_meal > 0) p.push('<div class="promo red"><span class="tag">FREE</span><b>Free palamig with every meal</b><p>Order here on our website, get a Nata Palamig on us for every kare-kare. Limited time only.</p></div>');
+  p.push('<div class="promo gold"><span class="tag">' + S.loyalty.full + ' = FREE</span><b>Collect stamps, eat for free</b><p>' + S.loyalty.small + ' stamps = free drink. ' + S.loyalty.full + ' stamps = free Special Kare-Kare. Check yours under Stamps.</p></div>');
+  p.push('<div class="promo dark"><span class="tag">FREE</span><b>Free bagoong, every meal</b><p>Every kare-kare comes with our bagoong. ' + (SERVES) + ', sulit for the barkada.</p></div>');
+  return '<div class="promos">' + p.join('') + '</div>';
+}
+function reviews(itemId){
+  var list = (S.reviews || []).filter(function(r){ return itemId === 'ALL' ? true : r.item === itemId || r.item === 'ALL'; });
+  if (!list.length) return '';
+  return '<div class="sec"><h2>What customers say</h2></div><div class="promos">' + list.map(function(r){
+    return '<div class="rev">' + (r.photo ? '<img src="' + esc(r.photo) + '" alt="" loading="lazy">' : '') + '<div><span class="st">' + '&#9733;'.repeat(r.stars) + '</span><q>' + esc(r.text) + '</q><small>' + esc(r.name || 'Customer') + (r.source ? ', ' + esc(r.source) : '') + '</small></div></div>';
+  }).join('') + '</div>';
 }
 function bump(id, d){ setQty(id, (CART[id] || 0) + d); var v = (location.hash || '#/').slice(2).split('/')[0]; if (v === 'checkout') checkout(true); else menu(); bar(); }
 function hr12(h){ h = Number(h); return (h % 12 || 12) + (h >= 12 ? ' PM' : ' AM'); }
@@ -242,7 +277,8 @@ function openMeal(id){
   var m = item(id), adds = S.menu.filter(function(x){ return !x.meal; });
   SHEET = { id: id, qty: Math.max(1, CART[id] || 0), adds: {} };
   var h = '<button class="x" onclick="closeSheet()" aria-label="Close">&times;</button><div class="ph" style="background-image:url(' + (PHOTO[id] || 'img/kk.jpg') + ')"></div><div class="bd">'
-    + '<h3>' + esc(m.name) + '</h3><p class="muted">' + esc(BLURB[id] || '') + ' Comes with 1 free bagoong.</p>'
+    + (BADGE[id] ? '<span class="badge ' + BADGE[id][1] + '">' + BADGE[id][0] + '</span>' : '') + '<h3>' + esc(m.name) + '</h3><p class="muted">' + esc(BLURB[id] || '') + ' ' + SERVES + '. Comes with free bagoong' + ((S.free_drink || {}).per_meal > 0 ? ' and free palamig' : '') + '.</p>'
+    + (function(){ var r = (S.reviews || []).filter(function(x){ return x.item === id; }); return r.length ? reviews(id).replace('<div class="promos">', '<div class="promos" style="margin:4px -16px 8px">') : ''; })()
     + '<div class="li" style="padding:10px 0"><div class="nm"><b>How many</b><small>' + peso(m.price) + ' each</small></div><div id="sq">' + stepper('main', SHEET.qty, 'sheetBump') + '</div></div>'
     + '<label class="f">Add ons <small>optional</small></label><div class="list">';
   adds.forEach(function(a){ h += '<div class="li"><div class="nm"><b>' + esc(a.name) + '</b><small>+' + peso(a.price) + '</small></div><div id="sa_' + a.id + '">' + stepper(a.id, 0, 'sheetBump') + '</div></div>'; });
@@ -304,7 +340,8 @@ function setF(f, first){
   $('fDel').classList.toggle('on', f === 'DELIVERY'); $('fPick').classList.toggle('on', f === 'PICK UP');
   $('addrBox').style.display = f === 'DELIVERY' ? 'block' : 'none';
   $('pickNote').textContent = f === 'PICK UP' ? (S.pickup_address ? 'Pick up at ' + S.pickup_address : 'We will send the pick up spot with your confirmation.') : (S.delivery_area ? 'We deliver within ' + S.delivery_area + '.' : '');
-  if (f !== 'DELIVERY' && CO.payment === 'CASH ON DELIVERY') CO.payment = '';
+  if (f !== 'DELIVERY' && CO.payment === 'CASH ON DELIVERY') CO.payment = 'CASH ON PICK UP';
+  if (f === 'DELIVERY' && CO.payment === 'CASH ON PICK UP') CO.payment = 'CASH ON DELIVERY';
   days(); pays(); sum();
   if (f === 'DELIVERY') initMap();
 }
@@ -383,10 +420,10 @@ function days(){
   $('time').onchange = function(){ CO.time = this.value; };
 }
 function pays(){
-  var list = S.payments.filter(function(p){ return p !== 'CASH ON DELIVERY' || CO.fulfillment === 'DELIVERY'; });
-  var label = { 'GCASH': 'GCash', 'BANK TRANSFER': 'Bank transfer', 'CASH ON DELIVERY': 'Cash on delivery' };
+  var list = S.payments.filter(function(p){ return p === 'CASH ON DELIVERY' ? CO.fulfillment === 'DELIVERY' : p === 'CASH ON PICK UP' ? CO.fulfillment !== 'DELIVERY' : true; });
+  var label = { 'GCASH': 'GCash', 'BANK TRANSFER': 'Bank transfer', 'CASH ON DELIVERY': 'Cash on delivery', 'CASH ON PICK UP': 'Cash on pick up' };
   $('pays').innerHTML = list.map(function(p){ return '<button class="' + (CO.payment === p ? 'on' : '') + '" onclick="CO.payment=\'' + p + '\';pays()">' + label[p] + '</button>'; }).join('');
-  $('payNote').textContent = CO.payment === 'CASH ON DELIVERY' ? 'Pay the rider in cash. Please prepare the exact amount.' : CO.payment ? 'Send your payment after placing the order, then upload the screenshot. We start cooking once it is confirmed.' : '';
+  $('payNote').textContent = CO.payment === 'CASH ON DELIVERY' ? 'Pay the rider in cash. Please prepare the exact amount.' : CO.payment === 'CASH ON PICK UP' ? 'Pay in cash when you pick up your order.' : CO.payment ? 'Send your payment after placing the order, then upload the screenshot. We start cooking once it is confirmed.' : '';
 }
 function freeList(meals){
   var out = [];
@@ -398,7 +435,7 @@ function sum(){
   cartLines().forEach(function(l){ var m = item(l.item_id); h += '<tr><td>' + l.qty + ' x ' + esc(m.name) + '</td><td>' + peso(l.qty * m.price) + '</td></tr>'; });
   var free = freeList(cartMeals()), saved = 0;
   free.forEach(function(f){ saved += f.value; h += '<tr class="free"><td>' + f.qty + ' x ' + esc(f.name) + ' (free with every meal)</td><td>' + (f.value ? '<s>' + peso(f.value) + '</s>' : '') + 'FREE</td></tr>'; });
-  if (CO.fulfillment === 'DELIVERY') h += '<tr><td>Delivery fee' + (CO.quote ? ' (' + CO.quote.km + ' km)' : '') + '</td><td>' + (CO.quote ? peso(CO.quote.fee) : 'pin your location') + '</td></tr>';
+  if (CO.fulfillment === 'DELIVERY') h += '<tr><td>Delivery fee, paid to the rider' + (CO.quote ? ' (' + CO.quote.km + ' km)' : '') + '</td><td>' + (CO.quote ? peso(CO.quote.fee) : 'pin your location') + '</td></tr>';
   h += '<tr class="tot"><td>Total</td><td>' + peso(cartFood() + fee()) + '</td></tr>';
   if (saved) h += '<tr><td colspan="2"><div class="saved">You saved ' + peso(saved) + ' on free add ons</div></td></tr>';
   $('sum').innerHTML = h;
@@ -442,8 +479,8 @@ function placed(){
     + (r.free || []).map(function(f){ return '<tr class="free"><td>' + f.qty + ' x ' + esc(f.name) + ' (free)</td><td>' + (f.value ? '<s>' + peso(f.value) + '</s>' : '') + 'FREE</td></tr>'; }).join('')
     + (r.fee ? '<tr><td>Delivery fee</td><td>' + peso(r.fee) + '</td></tr>' : '') + '<tr class="tot"><td>Total</td><td>' + peso(r.total) + '</td></tr></table>' + (r.saved ? '<div class="saved">You saved ' + peso(r.saved) + ' on free add ons</div>' : '')
     + '<p class="muted">' + esc(r.slot_label) + ' &middot; ' + esc(r.payment) + '</p></div>';
-  if (r.payment !== 'CASH ON DELIVERY') h += '<div class="card"><h2>Pay and upload your proof</h2>' + payBox(r.pay_to, r.total) + proofForm(r.order_id, last.phone) + '</div>';
-  else h += '<div class="okbox">Cash on delivery. We will confirm your order shortly. Please prepare ' + peso(r.total) + '.</div>';
+  if (!/^CASH ON/.test(r.payment)) h += '<div class="card"><h2>Pay and upload your proof</h2>' + payBox(r.pay_to, r.total) + proofForm(r.order_id, last.phone) + '</div>';
+  else h += '<div class="okbox">' + (r.payment === 'CASH ON PICK UP' ? 'Cash on pick up. We will confirm your order and text you the pick up spot. Please prepare ' : 'Cash on delivery. We will confirm your order shortly. Please prepare ') + peso(r.total) + '.</div>';
   h += '<a class="btn dark" href="#/track/' + encodeURIComponent(r.order_id) + '">Track my order</a>';
   $('app').innerHTML = h;
 }
@@ -510,7 +547,7 @@ async function doTrack(quiet){
 
 function stamps(){
   var me = store('pb_me') || {};
-  $('app').innerHTML = '<div class="sec"><h2>My loyalty stamps</h2></div><div class="card"><p class="muted" style="margin-top:0">Collect 5 stamps for a free drink, 15 for a free Kare-Kare Overload.</p>'
+  $('app').innerHTML = '<div class="sec"><h2>My loyalty stamps</h2></div><div class="card"><p class="muted" style="margin-top:0">Collect 5 stamps for a free drink, 15 for a free Special Kare-Kare.</p>'
     + '<label class="f" for="sph">Mobile number</label><input class="i" id="sph" inputmode="tel" value="' + esc(me.phone || '') + '"><div class="err" id="serr"></div><br><button class="btn dark" onclick="doStamps()">Check my stamps</button></div><div id="sout"></div>';
   if (me.phone) doStamps();
 }
@@ -524,7 +561,7 @@ async function doStamps(){
     h += '</div>';
     h += !s.found ? '<p class="muted">No stamps yet for this number. You earn a stamp with every qualified purchase.</p>'
       : '<p><b>' + s.stamps + ' stamp' + (s.stamps === 1 ? '' : 's') + '</b>. '
-        + (s.can_full ? 'You can claim a free Kare-Kare Overload!' : s.can_small ? 'You can claim a free drink! ' + s.to_full + ' more to a free Overload.' : s.to_small ? s.to_small + ' more to a free drink.' : s.to_full + ' more to a free Overload.') + '</p>';
+        + (s.can_full ? 'You can claim a free Special Kare-Kare!' : s.can_small ? 'You can claim a free drink! ' + s.to_full + ' more to a free Special.' : s.to_small ? s.to_small + ' more to a free drink.' : s.to_full + ' more to a free Special.') + '</p>';
     $('sout').innerHTML = h + '</div>';
   } catch (err) { $('sout').innerHTML = ''; e.textContent = err.message; e.style.display = 'block'; }
 }
