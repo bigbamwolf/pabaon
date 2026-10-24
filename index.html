@@ -58,16 +58,16 @@ main{max-width:640px;margin:0 auto;padding:0 16px}
 .serves{display:inline-block;margin-top:4px;font:700 11.5px 'Nunito',sans-serif;color:var(--k2)}
 .promos{display:flex;gap:10px;overflow-x:auto;scroll-snap-type:x mandatory;margin:12px -16px 4px;padding:0 16px 6px;-webkit-overflow-scrolling:touch;scrollbar-width:none}
 .promos::-webkit-scrollbar{display:none}
-.promos.slider{scroll-behavior:smooth;margin-bottom:0}
-.promos.slider .promo{flex:0 0 calc(100% - 32px);max-width:none}
+.promos.slider{scroll-behavior:smooth;margin:12px 0 0;padding:0;gap:0;border-radius:18px}
+.promos.slider .promo{flex:0 0 100%;max-width:none}
 .dots{display:flex;justify-content:center;gap:6px;margin:4px 0 6px}
 .dots i{width:7px;height:7px;border-radius:999px;background:var(--line);transition:width .25s,background .25s}
 .dots i.on{width:20px;background:var(--k)}
-@media(min-width:760px){.promos.slider{display:grid;grid-template-columns:repeat(3,1fr);overflow:visible;margin:12px 0 4px;padding:0}.promos.slider .promo{max-width:none}.dots{display:none}}
+@media(min-width:760px){.promos.slider{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;overflow:visible;margin:12px 0 4px;padding:0;border-radius:0}.promos.slider .promo{max-width:none}.dots{display:none}}
 .promo{flex:0 0 86%;max-width:420px;scroll-snap-align:start;border-radius:18px;padding:16px 16px 14px;color:#fff;position:relative;overflow:hidden;min-height:118px}
 .promo b{display:block;font:900 22px/1.05 'Fira Sans',sans-serif}
-.promo p{margin:6px 0 0;font:700 13px 'Nunito',sans-serif;opacity:.95;max-width:75%}
-.promo .tag{position:absolute;right:12px;top:12px;background:#fff;color:var(--red);border-radius:999px;padding:4px 10px;font:900 12px 'Fira Sans',sans-serif}
+.promo p{margin:6px 0 0;font:700 13px 'Nunito',sans-serif;opacity:.95}
+.promo .tag{display:inline-block;margin-bottom:7px;background:#fff;color:var(--red);border-radius:999px;padding:3px 10px;font:900 11.5px 'Fira Sans',sans-serif;letter-spacing:.3px}
 .promo.red{background:linear-gradient(135deg,#C8102E,#8E0B20)}.promo.dark{background:linear-gradient(135deg,#1d1d1d,#3a2a12)}.promo.gold{background:linear-gradient(135deg,#EFC52B,#d9a400);color:var(--k)}
 .promo.gold .tag{color:var(--k)}
 .rev{flex:0 0 78%;max-width:360px;scroll-snap-align:start;background:#fff;border-radius:16px;box-shadow:var(--sh);overflow:hidden}
@@ -275,7 +275,7 @@ function startPromos(){
   clearInterval(PROMO_TIMER);
   var box = $('promos'); if (!box) return;
   var dots = $('dots').children, n = box.children.length, idle = true;
-  function cur(){ return Math.round(box.scrollLeft / (box.children[0].offsetWidth + 10)); }
+  function cur(){ return Math.round(box.scrollLeft / (box.children[0].offsetWidth)); }
   function mark(){ var c = cur(); for (var i = 0; i < dots.length; i++) dots[i].className = i === c ? 'on' : ''; }
   box.addEventListener('scroll', function(){ requestAnimationFrame(mark); }, { passive: true });
   box.addEventListener('touchstart', function(){ idle = false; setTimeout(function(){ idle = true; }, 8000); }, { passive: true });
@@ -283,7 +283,7 @@ function startPromos(){
   PROMO_TIMER = setInterval(function(){
     if (!idle || document.hidden || !document.body.contains(box)) return;
     var next = (cur() + 1) % n;
-    box.scrollTo({ left: next * (box.children[0].offsetWidth + 10), behavior: 'smooth' });
+    box.scrollTo({ left: next * (box.children[0].offsetWidth), behavior: 'smooth' });
   }, 4000);
 }
 function reviews(itemId){
