@@ -174,11 +174,11 @@ footer b{color:var(--k);font-family:'Nunito',sans-serif}
   <a href="#/" aria-label="PABAON home"><img src="logo-sm.png" alt="PABAON" width="88" height="42"></a>
   <nav><a href="#/" data-v="menu">Menu</a><a href="#/track" data-v="track">Track</a><a href="#/stamps" data-v="stamps">Stamps</a></nav>
 </header>
-<main id="app"><section class="hero"><img src="img/hero.jpg" alt="PABAON kare-kare"><div class="cap"><h1>Kare-kare, <b>made the way home tastes.</b></h1><p>Delivered or for pick up. Free bagoong with every meal.</p></div></section><p class="center" style="padding:30px 0"><span class="spin"></span></p></main>
+<main id="app"><section class="hero"><img src="img/hero.jpg" alt="PABAON kare-kare"><div class="cap"><h1>A True <b>TASTE of HOME</b> Anytime &amp; Anywhere</h1><p>Delivered or for pick up. Free bagoong with every meal.</p></div></section><p class="center" style="padding:30px 0"><span class="spin"></span></p></main>
 <div class="bar" id="bar" style="display:none"><button id="barBtn" onclick="go('#/checkout')"></button></div>
 <div class="sheet-bg" id="sheetBg" onclick="closeSheet()"></div>
 <div class="sheet" id="sheet"></div>
-<footer><b>PABAON</b> by A&amp;D Artisan Foods Corporation<br>A true taste of home, anytime and anywhere.</footer>
+<footer><b>PABAON</b> by A&amp;D Artisan Foods Corporation<br>A True TASTE of HOME Anytime &amp; Anywhere</footer>
 <script>
 var API = 'https://script.google.com/macros/s/AKfycbzfno6dVwc1_Wb8Xp85pjkyh_LCp8-0bctvmxuORTFKmh8R01XZUeWbrtbl6L9fuWRWBQ/exec';
 var PHOTO = { 'KK-TRIPE': 'img/kk.jpg', 'KK-BAGNET': 'img/kk.jpg', 'KK-OVER': 'img/hero.jpg', 'KK-BAGOONG': 'img/bagoong.jpg', 'KK-SAUCE': 'img/kk.jpg', 'GULAMAN': 'img/palamig.jpg' };
@@ -247,7 +247,7 @@ function stepper(id, q, cb){
 
 function menu(){
   var meals = S.menu.filter(function(m){ return m.meal; }).sort(function(a, b){ return (ORDER.indexOf(a.id) + 99) % 99 - (ORDER.indexOf(b.id) + 99) % 99; }), adds = S.menu.filter(function(m){ return !m.meal; });
-  var h = promos() + '<section class="hero"><img src="img/hero.jpg" alt="PABAON kare-kare"><div class="cap"><h1>Kare-kare, <b>made the way home tastes.</b></h1><p>Delivered or for pick up. Free bagoong with every meal.</p></div></section>';
+  var h = promos() + '<section class="hero"><img src="img/hero.jpg" alt="PABAON kare-kare"><div class="cap"><h1>A True <b>TASTE of HOME</b> Anytime &amp; Anywhere</h1><p>Delivered or for pick up. Free bagoong with every meal.</p></div></section>';
   if (!S.open) h += '<div class="notice bad">We are not taking online orders right now. Please check back soon.</div>';
   else h += '<div class="notice">Open ' + hr12(Number(String(S.slots[1] && S.slots[1].times[0] ? S.slots[1].times[0].value : '10').slice(0,2))) + ' to 9 PM. Order at least an hour ahead, or book up to a few days ahead. Delivery ' + peso(S.fee_rule.first) + ' for the first km, plus ' + peso(S.fee_rule.per) + ' per km after' + (S.delivery_area ? ', ' + esc(S.delivery_area) : '') + '.</div>';
   h += '<div class="sec"><h2>Kare-Kare meals</h2><span>tap to add</span></div><div class="meals">';
