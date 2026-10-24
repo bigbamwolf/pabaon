@@ -142,7 +142,7 @@ input.i:focus,select.i:focus,textarea.i:focus{border-color:var(--y)}
 .tl li.done:after{background:var(--k)}
 .tl li b{display:block;font:800 15px 'Nunito',sans-serif}
 .tl li small{font-size:12px}
-.stamps{display:grid;grid-template-columns:repeat(5,1fr);gap:8px;margin:12px 0}
+.stamps{display:grid;grid-template-columns:repeat(5,minmax(0,64px));justify-content:center;gap:10px;margin:12px 0}
 .stamps div{aspect-ratio:1;border-radius:50%;border:2.5px solid var(--y);display:flex;align-items:center;justify-content:center;font:900 15px 'Fira Sans',sans-serif;color:var(--y)}
 .stamps div.on{background:var(--y);color:var(--k)}
 .prev{max-width:100%;max-height:220px;border-radius:12px;margin-top:10px;display:none}
@@ -161,6 +161,9 @@ footer b{color:var(--k);font-family:'Nunito',sans-serif}
 .pin{width:26px;height:26px;border-radius:50% 50% 50% 0;background:var(--k);border:3px solid var(--y);transform:rotate(-45deg);box-shadow:0 2px 6px rgba(0,0,0,.4)}
 .qr{display:flex;gap:12px;align-items:center}
 .qr img{width:132px;height:132px;border-radius:10px;background:#fff;padding:4px;flex:0 0 132px}
+.qr > div{min-width:0;flex:1}
+.qr .acct{font:900 17px 'Fira Sans',sans-serif;letter-spacing:.5px;overflow-wrap:anywhere}
+@media(max-width:400px){.qr{flex-direction:column;align-items:flex-start}.qr img{width:150px;height:150px;flex-basis:auto;align-self:center}}
 .layout2{display:block}
 @media(min-width:960px){main{max-width:980px}.layout2{display:grid;grid-template-columns:1.15fr .85fr;gap:20px;align-items:start}.layout2 .side{position:sticky;top:84px}.meals{display:grid;grid-template-columns:1fr 1fr;gap:12px}.meals .meal{margin:0}}
 @media(min-width:700px){.hero img{height:280px}.meal img{width:132px;height:132px;flex-basis:132px}}
@@ -490,7 +493,7 @@ function payBox(payTo, total){
   if (!payTo || !payTo.length) return '<div class="pay"><b>How to pay</b><br>We will message you our GCash or bank details for ' + peso(total) + '. Once paid, upload the screenshot below.</div>';
   return payTo.map(function(p){
     return '<div class="pay qr">' + (p.qr ? '<img src="' + esc(p.qr) + '" alt="' + esc(p.method) + ' QR">' : '') + '<div><b>' + (p.method === 'GCASH' ? 'GCash' : esc(p.bank || 'Bank transfer')) + '</b><br>' + esc(p.name || '')
-      + (p.number ? '<br><span style="font:900 17px Fira Sans,sans-serif;letter-spacing:.5px">' + esc(p.number) + '</span>' : '') + '<br><small class="muted">Save the QR, then in your app tap Scan QR, Upload QR.</small></div></div>';
+      + (p.number ? '<br><span class="acct">' + esc(p.number) + '</span>' : '') + '<br><small class="muted">Save the QR, then in your app tap Scan QR, Upload QR.</small></div></div>';
   }).join('') + '<p class="muted">Send exactly <b>' + peso(total) + '</b>, then upload the screenshot below.</p>';
 }
 
@@ -501,7 +504,7 @@ function placed(){
   var h = '<div class="card center"><p class="muted" style="margin:0">Order placed. Thank you!</p><div class="big">' + esc(r.order_id) + '</div><p class="muted" style="margin:4px 0 0">Keep this number to track your order.</p></div>'
     + '<div class="card"><table class="sum"><tr><td>Food</td><td>' + peso(r.food) + '</td></tr>'
     + (r.free || []).map(function(f){ return '<tr class="free"><td>' + f.qty + ' x ' + esc(f.name) + ' (free)</td><td>' + (f.value ? '<s>' + peso(f.value) + '</s>' : '') + 'FREE</td></tr>'; }).join('')
-    + (r.fee ? '<tr><td>Delivery fee</td><td>' + peso(r.fee) + '</td></tr>' : '') + '<tr class="tot"><td>Total</td><td>' + peso(r.total) + '</td></tr></table>' + (r.saved ? '<div class="saved">You saved ' + peso(r.saved) + ' on free add ons</div>' : '')
+    + (r.fee ? '<tr><td>Delivery fee, paid to the rider</td><td>' + peso(r.fee) + '</td></tr>' : '') + '<tr class="tot"><td>Total</td><td>' + peso(r.total) + '</td></tr></table>' + (r.saved ? '<div class="saved">You saved ' + peso(r.saved) + ' on free add ons</div>' : '')
     + '<p class="muted">' + esc(r.slot_label) + ' &middot; ' + esc(r.payment) + '</p></div>';
   if (!/^CASH ON/.test(r.payment)) h += '<div class="card"><h2>Pay and upload your proof</h2>' + payBox(r.pay_to, r.total) + proofForm(r.order_id, last.phone) + '</div>';
   else h += '<div class="okbox">' + (r.payment === 'CASH ON PICK UP' ? 'Cash on pick up. We will confirm your order and text you the pick up spot. Please prepare ' : 'Cash on delivery. We will confirm your order shortly. Please prepare ') + peso(r.total) + '.</div>';
