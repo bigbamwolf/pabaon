@@ -250,7 +250,7 @@ function menu(){
   var meals = S.menu.filter(function(m){ return m.meal; }).sort(function(a, b){ return (ORDER.indexOf(a.id) + 99) % 99 - (ORDER.indexOf(b.id) + 99) % 99; }), adds = S.menu.filter(function(m){ return !m.meal; });
   var h = promos() + '<section class="hero"><img src="img/hero.jpg" alt="PABAON kare-kare"><div class="cap"><h1>A True <b>TASTE of HOME</b> Anytime &amp; Anywhere</h1><p>Delivered or for pick up. Free bagoong with every meal.</p></div></section>';
   if (!S.open) h += '<div class="notice bad">We are not taking online orders right now. Please check back soon.</div>';
-  else h += '<div class="notice">Open ' + hr12(Number(String(S.slots[1] && S.slots[1].times[0] ? S.slots[1].times[0].value : '10').slice(0,2))) + ' to 9 PM. Order at least an hour ahead, or book up to a few days ahead. Delivery ' + peso(S.fee_rule.first) + ' for the first km, plus ' + peso(S.fee_rule.per) + ' per km after' + (S.delivery_area ? ', ' + esc(S.delivery_area) : '') + '.</div>';
+  else h += '<div class="notice">Open ' + hr12(Number(String(S.slots[1] && S.slots[1].times[0] ? S.slots[1].times[0].value : '10').slice(0,2))) + ' to 9 PM. Order at least ' + (S.lead_minutes || 15) + ' minutes ahead, or book up to a few days ahead. Delivery ' + peso(S.fee_rule.first) + ' for the first km, plus ' + peso(S.fee_rule.per) + ' per km after' + (S.delivery_area ? ', ' + esc(S.delivery_area) : '') + '.</div>';
   h += '<div class="sec"><h2>Kare-Kare meals</h2><span>tap to add</span></div><div class="meals">';
   meals.forEach(function(m){
     var q = CART[m.id] || 0;
