@@ -597,7 +597,8 @@ async function doTrack(quiet){
     var h = t.can_receive ? '<div class="card" style="border:3px solid var(--y);text-align:center"><h2 style="margin-top:0">' + (t.fulfillment === 'DELIVERY' ? 'Got your order?' : 'Picked up your order?') + '</h2>'
       + '<p class="muted" style="margin:0 0 12px">Please tap below once it is in your hands so we know it arrived safely.</p>'
       + '<button class="btn dark" id="rbtn" onclick="gotIt(\'' + esc(t.order_id) + '\')">' + (t.fulfillment === 'DELIVERY' ? 'Order received' : 'Order picked up') + '</button></div>' : '';
-    if (RECEIVED === t.order_id && t.fill_status === 'DELIVERED') h += '<div class="okbox">Thank you! Enjoy your kare-kare.</div>';
+    if (t.fill_status === 'DELIVERED') h += '<div class="card" style="text-align:center"><h2 style="margin-top:0">' + (RECEIVED === t.order_id ? 'Thank you! Enjoy your kare-kare.' : 'Enjoyed your meal?') + '</h2>'
+      + (t.review_link ? '<p class="muted" style="margin:0 0 12px">Your feedback helps our small kitchen a lot. It only takes a minute.</p><a class="btn dark" href="' + esc(t.review_link) + '" target="_blank" rel="noopener">Leave us a review on Facebook</a>' : '<p class="muted" style="margin:0">Order again anytime. Salamat!</p>') + '</div>';
     h += '<div class="card"><div style="display:flex;justify-content:space-between;align-items:baseline"><b style="font-family:Fira Sans;font-weight:900;font-size:18px">' + esc(t.order_id) + '</b><b>' + peso(t.total) + '</b></div>'
       + '<p class="muted" style="margin:4px 0 12px">' + esc(t.items) + '<br>' + esc(t.fulfillment) + ', ' + esc(t.slot_label) + '</p>';
     if (t.cancelled) h += '<div class="err" style="display:block">This order was cancelled' + (t.cancel_reason ? ' (' + esc(t.cancel_reason.toLowerCase()) + ')' : '') + '. Message us if this is a mistake.</div>';
