@@ -159,6 +159,10 @@ footer b{color:var(--k);font-family:'Nunito',sans-serif}
 .maprow button{flex:0 0 auto;padding:0 14px;border-radius:12px;border:1.5px solid var(--line);background:#fff;font:800 13px 'Nunito',sans-serif;cursor:pointer}
 .quote{margin-top:8px;padding:10px 12px;border-radius:12px;background:var(--yl);font-size:13.5px}
 .quote.bad{background:var(--badl);color:var(--bad)}
+.pinchk{margin-top:8px;font-size:13px;color:var(--mut,#666)}
+.pinwarn{margin-top:8px;padding:10px 12px;border-radius:12px;background:var(--badl);color:var(--bad);font-size:13.5px}
+.pinwarn label{display:flex;gap:8px;align-items:flex-start;margin-top:8px;color:#222;font-weight:700}
+.pinwarn input{width:20px;height:20px;flex:0 0 20px;margin:0}
 .pin{width:26px;height:26px;border-radius:50% 50% 50% 0;background:var(--k);border:3px solid var(--y);transform:rotate(-45deg);box-shadow:0 2px 6px rgba(0,0,0,.4)}
 .qr{display:flex;gap:12px;align-items:center}
 .qr img{width:132px;height:132px;border-radius:10px;background:#fff;padding:4px;flex:0 0 132px}
@@ -345,11 +349,11 @@ function checkout(keep){
   h += '<div class="card"><h2>Your details</h2>'
     + '<label class="f" for="name">Name</label><input class="i" id="name" autocomplete="name" maxlength="60" value="' + esc(me.name || '') + '">'
     + '<label class="f" for="phone">Mobile number</label><input class="i" id="phone" inputmode="tel" autocomplete="tel" placeholder="09XX XXX XXXX" maxlength="16" value="' + esc(me.phone || '') + '">'
-    + '<div id="addrBox"><label class="f" for="address">Delivery address</label><textarea class="i" id="address" rows="2" autocomplete="street-address" maxlength="200">' + esc(me.address || '') + '</textarea>'
+    + '<div id="addrBox"><label class="f" for="address">Delivery address</label><textarea class="i" id="address" rows="2" autocomplete="street-address" maxlength="200" onchange="pinCheck()">' + esc(me.address || '') + '</textarea>'
     + '<label class="f" for="landmark">Landmark <small>helps the rider find you</small></label><input class="i" id="landmark" maxlength="120" value="' + esc(me.landmark || '') + '">'
     + '<label class="f">Pin your location <small>sets the delivery fee</small></label>'
     + '<div class="maprow"><input class="i" id="msearch" placeholder="Search street or barangay" onkeydown="if(event.key===\'Enter\'){event.preventDefault();mapSearch()}"><button type="button" onclick="mapSearch()">Find</button><button type="button" onclick="locateMe()">&#9673; Me</button></div>'
-    + '<div id="map"></div><div class="quote" id="quote">Tap the map or drag the pin to your door.</div></div>'
+    + '<div id="map"></div><div class="quote" id="quote">Tap the map or drag the pin to your door.</div><div id="pinchk"></div></div>'
     + '<label class="f" for="email">Email <small>optional, for your receipt</small></label><input class="i" id="email" type="email" autocomplete="email" maxlength="80" value="' + esc(me.email || '') + '">'
     + '<label class="f" for="notes">Notes <small>optional</small></label><textarea class="i" id="notes" rows="2" maxlength="300" placeholder="Less sauce, call when outside, etc."></textarea>'
     + '<div class="hp" aria-hidden="true"><label>Website<input id="website" tabindex="-1" autocomplete="off"></label></div></div>';
@@ -409,11 +413,36 @@ async function quote(lat, lng){
     r.roads = roads; CO.quote = r;
     var m = store('pb_me') || {}; m.pin = [lat, lng]; store('pb_me', m);
     q.innerHTML = '<b>' + r.exact_km + ' km</b> from our ' + esc(r.from) + ' pwesto, charged as ' + r.km + ' km. Delivery <b>' + peso(r.fee) + '</b>';
+    pinCheck();
   } catch (e) {
     if (me !== QSEQ) return; q.className = 'quote bad'; q.textContent = e.message;
     if (/Lalamove/.test(e.message)) q.insertAdjacentHTML('beforeend', '<br><button type="button" class="btn dark" style="margin-top:10px;padding:11px" onclick="farPickup()">Switch to pick up, I will book Lalamove</button>');
   }
   sum();
+}
+var PCSEQ = 0;
+function kmBetween(a, b, c, d){ var R = 6371, x = (c - a) * Math.PI / 180, y = (d - b) * Math.PI / 180, h = Math.sin(x / 2) * Math.sin(x / 2) + Math.cos(a * Math.PI / 180) * Math.cos(c * Math.PI / 180) * Math.sin(y / 2) * Math.sin(y / 2); return 2 * R * Math.asin(Math.sqrt(h)); }
+async function pinCheck(){
+  var box = $('pinchk'); if (!box || !CO.quote) return;
+  var me = ++PCSEQ, lat = CO.quote.lat, lng = CO.quote.lng, typed = ($('address') || {}).value || '';
+  CO.pinAddr = ''; CO.gap = 0; CO.pinOk = false;
+  try {
+    var rv = await (await fetch('https://nominatim.openstreetmap.org/reverse?format=json&zoom=18&addressdetails=0&lat=' + lat + '&lon=' + lng)).json();
+    if (me !== PCSEQ) return;
+    CO.pinAddr = String(rv.display_name || '').split(', ').slice(0, 4).join(', ');
+  } catch (e) {}
+  var h = CO.pinAddr ? '<div class="pinchk">Your pin is at: <b>' + esc(CO.pinAddr) + '</b></div>' : '';
+  if (typed.trim().length >= 6) {
+    try {
+      await new Promise(function(r){ setTimeout(r, 1100); });
+      var f = await (await fetch('https://nominatim.openstreetmap.org/search?format=json&limit=1&countrycodes=ph&bounded=1&viewbox=120.90,14.75,121.15,14.45&q=' + encodeURIComponent(typed + ', Metro Manila'))).json();
+      if (me !== PCSEQ) return;
+      if (f.length) CO.gap = kmBetween(lat, lng, +f[0].lat, +f[0].lon);
+    } catch (e) {}
+  }
+  if (CO.gap >= 1) h += '<div class="pinwarn"><b>Check your pin.</b> It is about ' + CO.gap.toFixed(1) + ' km away from the address you typed. The delivery fee is based on the pin, so move it to your exact door.'
+    + '<label><input type="checkbox" onchange="CO.pinOk=this.checked">My pin is at my exact door</label></div>';
+  box.innerHTML = h;
 }
 function farPickup(){
   var n = $('notes'); if (n && n.value.indexOf('Lalamove') < 0) n.value = (n.value ? n.value + ' | ' : '') + 'Far address, I will book my own Lalamove or Grab for pick up';
@@ -473,13 +502,13 @@ async function place(){
   var e = $('err'); e.style.display = 'none';
   var v = grab();
   var fail = !v.name.trim() ? 'Please enter your name' : !/^(\+?63|0)?9\d{9}$/.test(v.phone.replace(/[\s-]/g, '')) ? 'Please enter a valid mobile number, like 0917 123 4567'
-    : CO.fulfillment === 'DELIVERY' && v.address.trim().length < 6 ? 'Please enter your delivery address' : CO.fulfillment === 'DELIVERY' && !CO.quote ? 'Please pin your location on the map so we can compute the delivery fee' : !CO.date || !CO.time ? 'Please pick a date and time' : !CO.payment ? 'Please pick how you will pay' : '';
+    : CO.fulfillment === 'DELIVERY' && v.address.trim().length < 6 ? 'Please enter your delivery address' : CO.fulfillment === 'DELIVERY' && !CO.quote ? 'Please pin your location on the map so we can compute the delivery fee' : CO.fulfillment === 'DELIVERY' && CO.gap >= 1 && !CO.pinOk ? 'Your pin is ' + CO.gap.toFixed(1) + ' km from the address you typed. Move the pin to your door, or tick "My pin is at my exact door".' : !CO.date || !CO.time ? 'Please pick a date and time' : !CO.payment ? 'Please pick how you will pay' : '';
   if (fail) { e.textContent = fail; e.style.display = 'block'; return; }
   var b = $('place'); b.disabled = true; b.innerHTML = '<span class="spin"></span> Placing your order';
   try {
     var r = await api({ action: 'place', items: cartLines(), name: v.name, phone: v.phone, email: v.email, fulfillment: CO.fulfillment, address: v.address,
       landmark: v.landmark, notes: v.notes, date: CO.date, time: CO.time, payment: CO.payment, website: $('website').value,
-      lat: CO.quote ? CO.quote.lat : '', lng: CO.quote ? CO.quote.lng : '', roads: CO.quote ? CO.quote.roads : [] });
+      lat: CO.quote ? CO.quote.lat : '', lng: CO.quote ? CO.quote.lng : '', roads: CO.quote ? CO.quote.roads : [], pin_addr: CO.pinAddr || '', pin_gap_km: CO.gap || 0 });
     store('pb_me', { name: v.name, phone: v.phone, address: v.address, landmark: v.landmark, email: v.email });
     store('pb_last', { order_id: r.order_id, phone: v.phone, res: r });
     CART = {}; saveCart();
