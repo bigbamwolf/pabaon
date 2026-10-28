@@ -581,6 +581,12 @@ function track(id){
     + '<label class="f" for="tph">Mobile number used</label><input class="i" id="tph" inputmode="tel" value="' + esc(phone) + '"><div class="err" id="terr"></div><br><button class="btn dark" id="tbtn" onclick="doTrack()">Track</button></div><div id="tout"></div>';
   if (id && phone) doTrack();
 }
+var RECEIVED = '';
+async function gotIt(id){
+  var b = $('rbtn'); b.disabled = true; b.innerHTML = '<span class="spin"></span> Saving';
+  try { await api({ action: 'received', order_id: id, phone: $('tph').value.trim() }); RECEIVED = id; doTrack(true); }
+  catch (e) { b.disabled = false; b.textContent = 'Order received'; alert(e.message); }
+}
 async function doTrack(quiet){
   var e = $('terr'); if (!e) return; e.style.display = 'none';
   var id = $('tid').value.trim(), phone = $('tph').value.trim();
@@ -588,7 +594,11 @@ async function doTrack(quiet){
   if (!quiet) $('tout').innerHTML = '<p class="center"><span class="spin"></span></p>';
   try {
     var t = await api({ action: 'track', order_id: id, phone: phone });
-    var h = '<div class="card"><div style="display:flex;justify-content:space-between;align-items:baseline"><b style="font-family:Fira Sans;font-weight:900;font-size:18px">' + esc(t.order_id) + '</b><b>' + peso(t.total) + '</b></div>'
+    var h = t.can_receive ? '<div class="card" style="border:3px solid var(--y);text-align:center"><h2 style="margin-top:0">' + (t.fulfillment === 'DELIVERY' ? 'Got your order?' : 'Picked up your order?') + '</h2>'
+      + '<p class="muted" style="margin:0 0 12px">Please tap below once it is in your hands so we know it arrived safely.</p>'
+      + '<button class="btn dark" id="rbtn" onclick="gotIt(\'' + esc(t.order_id) + '\')">' + (t.fulfillment === 'DELIVERY' ? 'Order received' : 'Order picked up') + '</button></div>' : '';
+    if (RECEIVED === t.order_id && t.fill_status === 'DELIVERED') h += '<div class="okbox">Thank you! Enjoy your kare-kare.</div>';
+    h += '<div class="card"><div style="display:flex;justify-content:space-between;align-items:baseline"><b style="font-family:Fira Sans;font-weight:900;font-size:18px">' + esc(t.order_id) + '</b><b>' + peso(t.total) + '</b></div>'
       + '<p class="muted" style="margin:4px 0 12px">' + esc(t.items) + '<br>' + esc(t.fulfillment) + ', ' + esc(t.slot_label) + '</p>';
     if (t.cancelled) h += '<div class="err" style="display:block">This order was cancelled' + (t.cancel_reason ? ' (' + esc(t.cancel_reason.toLowerCase()) + ')' : '') + '. Message us if this is a mistake.</div>';
     else h += '<ul class="tl">' + t.steps.map(function(s){ return '<li class="' + (s.done ? 'done' : '') + '"><b>' + esc(s.label) + '</b><small>' + esc(s.at || '') + '</small></li>'; }).join('') + '</ul>';
