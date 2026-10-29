@@ -172,6 +172,27 @@ footer b{color:var(--k);font-family:'Nunito',sans-serif}
 .layout2{display:block}
 @media(min-width:960px){main{max-width:980px}.layout2{display:grid;grid-template-columns:1.15fr .85fr;gap:20px;align-items:start}.layout2 .side{position:sticky;top:84px}.meals{display:grid;grid-template-columns:1fr 1fr;gap:12px}.meals .meal{margin:0}}
 @media(min-width:700px){.hero img{height:280px}.meal img{width:132px;height:132px;flex-basis:132px}}
+.hol{background:#111;color:#fff;min-height:100vh;margin:-8px -16px 0;padding:0 0 30px;font-family:'Nunito',system-ui,sans-serif}
+.hol-hero{padding:40px 24px 30px;text-align:center}
+.hol-badge{display:inline-block;background:var(--y);color:#000;font-family:'Fira Sans',sans-serif;font-weight:900;font-size:12px;letter-spacing:1.5px;padding:6px 14px;border-radius:20px;margin-bottom:18px}
+.hol h1{font-family:'Fira Sans',sans-serif;font-weight:900;font-size:30px;line-height:1.15;margin-bottom:12px;color:#fff}
+.hol h1 em{color:var(--y);font-style:normal}
+.hol-msg{color:#d4d4d4;font-size:15px;line-height:1.55;max-width:300px;margin:0 auto 24px}
+.hol-resume{background:#1c1c1c;border:1px solid #333;border-radius:14px;padding:16px 20px;margin:0 20px 22px;display:flex;align-items:center;gap:14px;text-align:left}
+.hol-resume small{display:block;color:#8a8a8a;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:1px}
+.hol-resume .d{font-family:'Fira Sans',sans-serif;font-weight:900;font-size:19px;color:var(--y)}
+.hol-btn{display:block;margin:0 20px 12px;padding:16px;border-radius:12px;font-family:'Fira Sans',sans-serif;font-weight:900;font-size:15px;text-align:center;letter-spacing:.5px;border:none;width:calc(100% - 40px)}
+.hol-btn.g{background:#2a2a2a;color:#777;border:1px dashed #444}
+.hol-btn.y{background:var(--y);color:#000}
+.hol-social{text-align:center;color:#8a8a8a;font-size:13px;margin:22px 0 10px}
+.hol-social a{color:#8a8a8a;text-decoration:underline}
+.hol-ft{text-align:center;color:#555;font-size:11px;padding:20px}
+.hol-peek{filter:grayscale(1) brightness(.4);pointer-events:none;padding:4px 20px 0}
+.hol-mi{background:#1c1c1c;border-radius:12px;padding:13px 15px;margin-bottom:9px;display:flex;align-items:center;gap:12px}
+.hol-mi .ph{width:46px;height:46px;border-radius:9px;background:#333;flex-shrink:0}
+.hol-mi .t b{font-family:'Fira Sans',sans-serif;font-weight:800;font-size:14px;color:#aaa;display:block}
+.hol-mi .t small{color:#666;font-size:12px}
+.hol-mi .pr{margin-left:auto;font-family:'Fira Sans',sans-serif;font-weight:900;color:#777}
 </style>
 </head>
 <body>
@@ -238,6 +259,7 @@ function route(){
   closeSheet();
   window.scrollTo(0, 0);
   if (!S && v !== 'track' && v !== 'stamps') return;
+  if (S && S.holiday && S.holiday.on && v !== 'track' && v !== 'stamps') { holidayClosed(); bar(); return; }
   if (v === 'checkout') checkout();
   else if (v === 'placed') placed();
   else if (v === 'track') track(parts[1] || '');
@@ -250,6 +272,28 @@ function stepper(id, q, cb){
   return '<div class="step"><button aria-label="Less" onclick="event.stopPropagation();' + cb + '(\'' + id + '\',-1)"' + (q <= 0 ? ' disabled' : '') + '>&minus;</button><span>' + q + '</span><button aria-label="More" onclick="event.stopPropagation();' + cb + '(\'' + id + '\',1)"' + (q >= S.max_qty ? ' disabled' : '') + '>+</button></div>';
 }
 
+function holidayClosed(){
+  var ho = S.holiday || {};
+  var fb = (S.reviews && S.reviews.fb) || 'https://www.facebook.com/profile.php?id=61560000000000';
+  var resume = ho.resume ? '<div class="hol-resume"><div><small>Ordering reopens</small><div class="d">' + esc(ho.resume) + '</div></div></div>' : '';
+  var msg = ho.message || 'We are closed for a short holiday. We will be back soon. Salamat sa pag order sa PABAON, see you soon!';
+  var peek = '';
+  (S.menu || []).filter(function(m){ return m.meal; }).slice(0, 2).forEach(function(m){
+    peek += '<div class="hol-mi"><div class="ph"></div><div class="t"><b>' + esc(m.name) + '</b><small>Back soon</small></div><div class="pr">' + Number(m.price) + '</div></div>';
+  });
+  $('bar').style.display = 'none';
+  $('app').innerHTML = '<div class="hol">'
+    + '<div class="hol-hero"><div class="hol-badge">ON HOLIDAY</div>'
+    + '<h1>We are on a<br><em>short break</em></h1>'
+    + '<div class="hol-msg">' + esc(msg) + '</div></div>'
+    + resume
+    + '<div class="hol-btn g">Ordering paused, closed</div>'
+    + '<a class="hol-btn y" href="https://www.facebook.com/PABAONbyAD" target="_blank" rel="noopener">Notify me when we reopen</a>'
+    + '<div class="hol-social">Find us on Facebook &nbsp;&middot;&nbsp; PABAON by A&amp;D</div>'
+    + '<div class="hol-peek">' + peek + '</div>'
+    + '<div class="hol-ft">PABAON by A&amp;D Artisan Foods &middot; pabaon.app</div>'
+    + '</div>';
+}
 function menu(){
   var meals = S.menu.filter(function(m){ return m.meal; }).sort(function(a, b){ return (ORDER.indexOf(a.id) + 99) % 99 - (ORDER.indexOf(b.id) + 99) % 99; }), adds = S.menu.filter(function(m){ return !m.meal; });
   var h = promos() + '<section class="hero"><img src="img/hero.jpg" alt="PABAON kare-kare"><div class="cap"><h1>A True <b>TASTE of HOME</b> Anytime &amp; Anywhere</h1><p>Delivered or for pick up. Free bagoong with every meal.</p></div></section>';
