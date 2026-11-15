@@ -1,0 +1,111 @@
+<!doctype html>
+<html lang="en"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="robots" content="noindex">
+<title>PABAON Order Voice</title>
+<link href="https://fonts.googleapis.com/css2?family=Fira+Sans:wght@800;900&family=Open+Sans:wght@500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{--red:#C8102E;--y:#EFC52B;--yl:#FFF6D6;--k:#0F0F0F;--mute:#6f6a5e;--paper:#FAF9F6;--line:#ece7da;--ok:#1f8a4c;--okl:#e6f4ec;--bad:#c62828;--badl:#fdecea}
+*{box-sizing:border-box}body{margin:0;background:var(--paper);color:var(--k);font:500 15px/1.5 'Open Sans',sans-serif}
+.wrap{max-width:520px;margin:0 auto;padding:20px 16px 40px}
+h1{font:900 26px 'Fira Sans',sans-serif;margin:0 0 4px;color:var(--red)}
+.sub{color:var(--mute);margin:0 0 18px;font-size:14px}
+.card{background:#fff;border:1px solid var(--line);border-radius:16px;padding:16px;margin-bottom:14px}
+.card h2{font:800 18px 'Fira Sans',sans-serif;margin:0 0 4px}
+.hint{color:var(--mute);font-size:13px;margin:0 0 12px}
+.say{background:var(--yl);border-radius:10px;padding:9px 12px;font-weight:700;font-size:14px;margin-bottom:12px}
+.row{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+button{font:700 14px 'Open Sans',sans-serif;border-radius:12px;border:1px solid var(--line);background:#fff;padding:11px 15px;cursor:pointer;color:var(--k)}
+button.rec{background:var(--red);border-color:var(--red);color:#fff}
+button.rec.on{background:var(--k);border-color:var(--k)}
+button.save{background:var(--ok);border-color:var(--ok);color:#fff}
+button:disabled{opacity:.45}
+.st{font-size:13px;color:var(--mute);margin-top:10px}
+.st b{color:var(--ok)}
+.timer{font:800 15px 'Fira Sans',sans-serif;color:var(--red);min-width:44px}
+.msg{border-radius:12px;padding:11px 13px;font-weight:700;font-size:14px;margin-bottom:14px}
+.msg.ok{background:var(--okl);color:var(--ok)}.msg.bad{background:var(--badl);color:var(--bad)}
+</style></head><body><div class="wrap">
+<h1>Our Order Voice</h1>
+<p class="sub" id="who">Checking your access...</p>
+<div id="msg"></div>
+<div id="slots"></div>
+<p class="hint">After your voice plays, the Order Center can still read the customer name, amount and time. You can turn that on or off in the Order Center.</p>
+</div>
+<script>
+var API = 'https://script.google.com/macros/s/AKfycbzfno6dVwc1_Wb8Xp85pjkyh_LCp8-0bctvmxuORTFKmh8R01XZUeWbrtbl6L9fuWRWBQ/exec';
+var KEY = decodeURIComponent((location.hash.match(/k=([^&]+)/) || [])[1] || '');
+var SLOTS = [
+  { id: 'new', title: 'New order', idea: 'Example: "Uy! May bagong order sa PABAON! Check niyo na po!"' },
+  { id: 'remind', title: 'Reminder', idea: 'Plays every 2 minutes until someone confirms. Example: "Hello, may order pa pong naghihintay!"' }
+];
+var CLIPS = {}, REC = {}, MAX = 15;
+function el(id){ return document.getElementById(id); }
+function esc(s){ return String(s == null ? '' : s).replace(/[&<>"]/g, function(c){ return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]; }); }
+function flash(t, bad){ el('msg').innerHTML = t ? '<div class="msg ' + (bad ? 'bad' : 'ok') + '">' + esc(t) + '</div>' : ''; }
+async function api(body){
+  body.key = KEY;
+  var r = await fetch(API, { method: 'POST', headers: { 'Content-Type': 'text/plain;charset=utf-8' }, body: JSON.stringify(body) });
+  var d = await r.json();
+  if (d.ok === false) throw new Error(d.error || 'Something went wrong');
+  return d;
+}
+function draw(){
+  el('slots').innerHTML = SLOTS.map(function(s){
+    var r = REC[s.id] || {}, saved = CLIPS[s.id];
+    return '<div class="card"><h2>' + s.title + '</h2><p class="hint">' + esc(s.idea) + '</p>'
+      + '<div class="row"><button class="rec' + (r.live ? ' on' : '') + '" onclick="toggle(\'' + s.id + '\')">' + (r.live ? 'Stop' : r.url ? 'Record again' : 'Record') + '</button>'
+      + '<span class="timer" id="t_' + s.id + '">' + (r.live ? '0s' : '') + '</span>'
+      + '<button ' + (r.url ? '' : 'disabled ') + 'onclick="play(\'' + s.id + '\')">Play</button>'
+      + '<button class="save" ' + (r.url && !r.live ? '' : 'disabled ') + 'onclick="save(\'' + s.id + '\')">Save</button></div>'
+      + '<div class="st">' + (saved ? '<b>In use:</b> recorded by ' + esc(saved.by) + ', ' + esc(saved.at) + ' <button style="padding:5px 10px;font-size:12px;margin-left:6px" onclick="clearClip(\'' + s.id + '\')">Remove</button>' : 'Not recorded yet. The Order Center uses the computer voice until you save one.') + '</div></div>';
+  }).join('');
+}
+function pickMime(){
+  var c = ['audio/mp4', 'audio/webm;codecs=opus', 'audio/webm', 'audio/ogg'];
+  for (var i = 0; i < c.length; i++) if (window.MediaRecorder && MediaRecorder.isTypeSupported && MediaRecorder.isTypeSupported(c[i])) return c[i];
+  return '';
+}
+async function toggle(id){
+  var r = REC[id] = REC[id] || {};
+  if (r.live) { r.mr.stop(); return; }
+  Object.keys(REC).forEach(function(k){ if (REC[k].live) REC[k].mr.stop(); });
+  flash('');
+  var stream;
+  try { stream = await navigator.mediaDevices.getUserMedia({ audio: { echoCancellation: true, noiseSuppression: true } }); }
+  catch (e) { flash('The phone did not allow the microphone. Allow microphone access for pabaon.app, then tap Record again.', true); return; }
+  var mime = pickMime(), chunks = [];
+  var mr = new MediaRecorder(stream, mime ? { mimeType: mime } : undefined);
+  mr.ondataavailable = function(e){ if (e.data && e.data.size) chunks.push(e.data); };
+  mr.onstop = function(){
+    stream.getTracks().forEach(function(t){ t.stop(); });
+    clearInterval(r.tick); r.live = false;
+    r.blob = new Blob(chunks, { type: (mr.mimeType || mime || 'audio/webm').split(';')[0] });
+    r.url = URL.createObjectURL(r.blob);
+    draw();
+  };
+  r.mr = mr; r.live = true; r.sec = 0; mr.start(); draw();
+  r.tick = setInterval(function(){ r.sec++; var t = el('t_' + id); if (t) t.textContent = r.sec + 's'; if (r.sec >= MAX) mr.stop(); }, 1000);
+}
+function play(id){ var r = REC[id]; if (r && r.url) new Audio(r.url).play(); }
+function save(id){
+  var r = REC[id]; if (!r || !r.blob) return;
+  var fr = new FileReader();
+  fr.onload = async function(){
+    flash('Saving...');
+    try { var d = await api({ action: 'voice_save', slot: id, data: fr.result }); CLIPS = d.clips; REC[id] = {}; flash('Saved. The Order Center will use this voice on the next refresh.'); draw(); }
+    catch (e) { flash(e.message, true); }
+  };
+  fr.readAsDataURL(r.blob);
+}
+async function clearClip(id){
+  if (!confirm('Remove this recording? The Order Center goes back to the computer voice.')) return;
+  try { var d = await api({ action: 'voice_clear', slot: id }); CLIPS = d.clips; flash('Removed.'); draw(); }
+  catch (e) { flash(e.message, true); }
+}
+(async function(){
+  if (!KEY) { el('who').textContent = 'Open this page from the Order Center so it knows who you are.'; return; }
+  try { var d = await api({ action: 'voice_who' }); CLIPS = d.clips; el('who').textContent = 'Hi ' + d.name + '. Record the voice every owner hears when a website order comes in. Up to 15 seconds each.'; draw(); }
+  catch (e) { el('who').textContent = 'This page is for the A&D owners only. Open it from the Order Center.'; }
+})();
+</script>
+</body></html>
