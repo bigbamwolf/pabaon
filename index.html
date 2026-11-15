@@ -78,6 +78,8 @@ main{max-width:640px;margin:0 auto;padding:0 16px}
 .rev q{display:block;font-size:13.5px;margin:4px 0 6px;quotes:none}
 .rev small{color:var(--mute);font-weight:700}
 .addbtn{background:var(--y);border:0;border-radius:999px;padding:8px 16px;font:800 14px 'Nunito',sans-serif;cursor:pointer}
+.soldout{font:800 12px 'Nunito',sans-serif;background:#e5e7eb;color:#6b7280;border-radius:999px;padding:4px 10px}
+.meal.out{opacity:.55;cursor:default}
 .incart{font:800 12px 'Nunito',sans-serif;background:var(--k);color:var(--y);border-radius:999px;padding:3px 9px}
 .list{background:var(--card);border-radius:var(--r);box-shadow:var(--sh);overflow:hidden}
 .li{display:flex;align-items:center;gap:12px;padding:12px 14px;border-bottom:1px solid var(--line)}
@@ -244,7 +246,9 @@ function cartFood(){ return cartLines().reduce(function(a, l){ return a + l.qty 
 function cartMeals(){ return cartLines().reduce(function(a, l){ return a + (item(l.item_id).meal ? l.qty : 0); }, 0); }
 function fee(){ return CO.fulfillment === 'DELIVERY' ? (CO.quote ? CO.quote.fee : 0) : 0; }
 function saveCart(){ store('pb_cart', CART); }
-function setQty(id, q){ CART[id] = Math.max(0, Math.min(S.max_qty, q)); saveCart(); }
+function cap(id){ var m = item(id === 'main' ? SHEET.id : id); return m && m.stock !== null && m.stock !== undefined ? Math.min(S.max_qty, m.stock) : S.max_qty; }
+function soldOut(m){ return m.stock === 0; }
+function setQty(id, q){ CART[id] = Math.max(0, Math.min(cap(id), q)); saveCart(); }
 
 function bar(){
   var n = cartQty(), v = (location.hash || '#/').split('/')[1] || '';
@@ -269,7 +273,7 @@ function route(){
 }
 
 function stepper(id, q, cb){
-  return '<div class="step"><button aria-label="Less" onclick="event.stopPropagation();' + cb + '(\'' + id + '\',-1)"' + (q <= 0 ? ' disabled' : '') + '>&minus;</button><span>' + q + '</span><button aria-label="More" onclick="event.stopPropagation();' + cb + '(\'' + id + '\',1)"' + (q >= S.max_qty ? ' disabled' : '') + '>+</button></div>';
+  return '<div class="step"><button aria-label="Less" onclick="event.stopPropagation();' + cb + '(\'' + id + '\',-1)"' + (q <= 0 ? ' disabled' : '') + '>&minus;</button><span>' + q + '</span><button aria-label="More" onclick="event.stopPropagation();' + cb + '(\'' + id + '\',1)"' + (q >= cap(id) ? ' disabled' : '') + '>+</button></div>';
 }
 
 function holidayClosed(){
@@ -302,12 +306,12 @@ function menu(){
   h += '<div class="sec"><h2>Kare-Kare meals</h2><span>tap to add</span></div><div class="meals">';
   meals.forEach(function(m){
     var q = CART[m.id] || 0;
-    h += '<div class="meal" onclick="openMeal(\'' + m.id + '\')"><img src="' + (PHOTO[m.id] || 'img/kk.jpg') + '" alt=""><div class="info">' + (BADGE[m.id] ? '<span class="badge ' + BADGE[m.id][1] + '">' + BADGE[m.id][0] + '</span>' : '') + '<h3>' + esc(m.name) + '</h3><p>' + esc(BLURB[m.id] || '') + '</p><span class="serves">&#128101; ' + SERVES + '</span>'
-      + '<div class="row"><span class="price">' + peso(m.price) + '</span>' + (q ? '<span class="incart">' + q + ' in cart</span>' : '<button class="addbtn">Add</button>') + '</div></div></div>';
+    h += '<div class="meal' + (soldOut(m) ? ' out' : '') + '"' + (soldOut(m) ? '' : ' onclick="openMeal(\'' + m.id + '\')"') + '><img src="' + (PHOTO[m.id] || 'img/kk.jpg') + '" alt=""><div class="info">' + (BADGE[m.id] ? '<span class="badge ' + BADGE[m.id][1] + '">' + BADGE[m.id][0] + '</span>' : '') + '<h3>' + esc(m.name) + '</h3><p>' + esc(BLURB[m.id] || '') + '</p><span class="serves">&#128101; ' + SERVES + '</span>'
+      + '<div class="row"><span class="price">' + peso(m.price) + '</span>' + (soldOut(m) ? '<span class="soldout">Sold out</span>' : q ? '<span class="incart">' + q + ' in cart</span>' : '<button class="addbtn">Add</button>') + '</div></div></div>';
   });
   h += '</div>' + reviews('ALL') + '<div class="sec"><h2>Add ons and drinks</h2></div><div class="list">';
   adds.forEach(function(m){
-    h += '<div class="li"><div class="nm"><b>' + esc(m.name) + '</b><small>' + peso(m.price) + '</small></div>' + stepper(m.id, CART[m.id] || 0, 'bump') + '</div>';
+    h += '<div class="li"><div class="nm"><b>' + esc(m.name) + '</b><small>' + peso(m.price) + '</small></div>' + (soldOut(m) ? '<span class="soldout">Sold out</span>' : stepper(m.id, CART[m.id] || 0, 'bump')) + '</div>';
   });
   h += '</div>';
   $('app').innerHTML = h;
@@ -350,7 +354,7 @@ function hr12(h){ h = Number(h); return (h % 12 || 12) + (h >= 12 ? ' PM' : ' AM
 
 var SHEET = {};
 function openMeal(id){
-  var m = item(id), adds = S.menu.filter(function(x){ return !x.meal; });
+  var m = item(id), adds = S.menu.filter(function(x){ return !x.meal && !soldOut(x); });
   SHEET = { id: id, qty: Math.max(1, CART[id] || 0), adds: {} };
   var h = '<button class="x" onclick="closeSheet()" aria-label="Close">&times;</button><div class="ph" style="background-image:url(' + (PHOTO[id] || 'img/kk.jpg') + ')"></div><div class="bd">'
     + (BADGE[id] ? '<span class="badge ' + BADGE[id][1] + '">' + BADGE[id][0] + '</span>' : '') + '<h3>' + esc(m.name) + '</h3><p class="muted">' + esc(BLURB[id] || '') + ' ' + SERVES + '. Comes with free bagoong' + ((S.free_drink || {}).per_meal > 0 ? ' and free palamig' : '') + '.</p>'
@@ -363,8 +367,8 @@ function openMeal(id){
   $('sheetBg').style.display = 'block'; requestAnimationFrame(function(){ $('sheet').classList.add('open'); });
 }
 function sheetBump(id, d){
-  if (id === 'main') { SHEET.qty = Math.max(1, Math.min(S.max_qty, SHEET.qty + d)); $('sq').innerHTML = stepper('main', SHEET.qty, 'sheetBump'); }
-  else { SHEET.adds[id] = Math.max(0, Math.min(S.max_qty, (SHEET.adds[id] || 0) + d)); $('sa_' + id).innerHTML = stepper(id, SHEET.adds[id], 'sheetBump'); }
+  if (id === 'main') { SHEET.qty = Math.max(1, Math.min(cap('main'), SHEET.qty + d)); $('sq').innerHTML = stepper('main', SHEET.qty, 'sheetBump'); }
+  else { SHEET.adds[id] = Math.max(0, Math.min(cap(id), (SHEET.adds[id] || 0) + d)); $('sa_' + id).innerHTML = stepper(id, SHEET.adds[id], 'sheetBump'); }
   sheetTotal();
 }
 function sheetTotal(){
