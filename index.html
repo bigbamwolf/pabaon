@@ -9,12 +9,12 @@
 <meta property="og:type" content="website">
 <meta property="og:title" content="PABAON Kare-Kare | Order online">
 <meta property="og:description" content="Kare-kare with bagnet, beef tripe or the Special. Delivered around Tondo or for pick up. Free bagoong with every meal.">
-<meta property="og:image" content="https://pabaon.app/img/hero.jpg">
+<meta property="og:image" content="https://pabaon.app/img/b2/hero.jpg">
 <meta property="og:url" content="https://pabaon.app/">
 <link rel="icon" href="icon-192.png">
 <link rel="apple-touch-icon" href="apple-touch-icon.png">
 <link rel="manifest" href="manifest.webmanifest">
-<link rel="preload" as="image" href="img/hero.jpg">
+<link rel="preload" as="image" href="img/b2/hero.jpg">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js" defer></script>
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -195,6 +195,7 @@ footer b{color:var(--k);font-family:'Nunito',sans-serif}
 .hol-mi .t b{font-family:'Fira Sans',sans-serif;font-weight:800;font-size:14px;color:#aaa;display:block}
 .hol-mi .t small{color:#666;font-size:12px}
 .hol-mi .pr{margin-left:auto;font-family:'Fira Sans',sans-serif;font-weight:900;color:#777}
+.li img.thumb{width:58px;height:58px;object-fit:cover;border-radius:10px;margin-right:12px;flex:none}
 </style>
 </head>
 <body>
@@ -202,14 +203,16 @@ footer b{color:var(--k);font-family:'Nunito',sans-serif}
   <a href="#/" aria-label="PABAON home"><img src="logo-sm.png" alt="PABAON" width="88" height="42"></a>
   <nav><a href="#/" data-v="menu">Menu</a><a href="#/track" data-v="track">Track</a><a href="#/stamps" data-v="stamps">Stamps</a></nav>
 </header>
-<main id="app"><section class="hero"><img src="img/hero.jpg" alt="PABAON kare-kare"><div class="cap"><h1>A True <b>TASTE of HOME</b> Anytime &amp; Anywhere</h1><p>Delivered or for pick up. Free bagoong with every meal.</p></div></section><p class="center" style="padding:30px 0"><span class="spin"></span></p></main>
+<main id="app"><section class="hero"><img src="img/b2/hero.jpg" alt="PABAON kare-kare"><div class="cap"><h1>A True <b>TASTE of HOME</b> Anytime &amp; Anywhere</h1><p>Delivered or for pick up. Free bagoong with every meal.</p></div></section><p class="center" style="padding:30px 0"><span class="spin"></span></p></main>
 <div class="bar" id="bar" style="display:none"><button id="barBtn" onclick="go('#/checkout')"></button></div>
 <div class="sheet-bg" id="sheetBg" onclick="closeSheet()"></div>
 <div class="sheet" id="sheet"></div>
 <footer><b>PABAON</b> by A&amp;D Artisan Foods Corporation<br>A True TASTE of HOME Anytime &amp; Anywhere</footer>
 <script>
 var API = 'https://script.google.com/macros/s/AKfycbzfno6dVwc1_Wb8Xp85pjkyh_LCp8-0bctvmxuORTFKmh8R01XZUeWbrtbl6L9fuWRWBQ/exec';
-var PHOTO = { 'KK-TRIPE': 'img/kk.jpg', 'KK-BAGNET': 'img/kk.jpg', 'KK-OVER': 'img/hero.jpg', 'KK-BAGOONG': 'img/bagoong.jpg', 'KK-SAUCE': 'img/kk.jpg', 'GULAMAN': 'img/palamig.jpg' };
+var PHOTO = { 'KK-TRIPE': 'img/b2/kk-tripe.jpg', 'KK-BAGNET': 'img/b2/kk-bagnet.jpg', 'KK-OVER': 'img/b2/kk-over.jpg', 'KK-BAGOONG': 'img/b2/kk-bagoong.jpg', 'KK-SAUCE': 'img/b2/kk-sauce.jpg', 'RICE': 'img/b2/rice.jpg', 'GULAMAN': 'img/b2/gulaman.jpg', 'X-TRIPE': 'img/b2/x-tripe.jpg', 'X-BAGNET': 'img/b2/x-bagnet.jpg' };
+var CARD = { 'KK-BAGNET': 'img/b2/card-kk-bagnet.jpg', 'KK-OVER': 'img/b2/card-kk-over.jpg', 'KK-TRIPE': 'img/b2/card-kk-tripe.jpg' };
+var THUMB = { 'KK-SAUCE': 'img/b2/th-kk-sauce.jpg', 'KK-BAGOONG': 'img/b2/th-kk-bagoong.jpg', 'RICE': 'img/b2/th-rice.jpg', 'GULAMAN': 'img/b2/th-gulaman.jpg', 'X-TRIPE': 'img/b2/th-x-tripe.jpg', 'X-BAGNET': 'img/b2/th-x-bagnet.jpg' };
 var BLURB = {
   'KK-TRIPE': 'Tender beef tripe in our slow cooked peanut sauce, with vegetables and bagoong.',
   'KK-BAGNET': 'Crispy bagnet over rich kare-kare sauce, with vegetables and bagoong.',
@@ -300,18 +303,18 @@ function holidayClosed(){
 }
 function menu(){
   var meals = S.menu.filter(function(m){ return m.meal; }).sort(function(a, b){ return (ORDER.indexOf(a.id) + 99) % 99 - (ORDER.indexOf(b.id) + 99) % 99; }), adds = S.menu.filter(function(m){ return !m.meal; });
-  var h = promos() + '<section class="hero"><img src="img/hero.jpg" alt="PABAON kare-kare"><div class="cap"><h1>A True <b>TASTE of HOME</b> Anytime &amp; Anywhere</h1><p>Delivered or for pick up. Free bagoong with every meal.</p></div></section>';
+  var h = promos() + '<section class="hero"><img src="img/b2/hero.jpg" alt="PABAON kare-kare"><div class="cap"><h1>A True <b>TASTE of HOME</b> Anytime &amp; Anywhere</h1><p>Delivered or for pick up. Free bagoong with every meal.</p></div></section>';
   if (!S.open) h += '<div class="notice bad">We are not taking online orders right now. Please check back soon.</div>';
   else h += '<div class="notice">Open ' + hr12(Number(String(S.slots[1] && S.slots[1].times[0] ? S.slots[1].times[0].value : '10').slice(0,2))) + ' to 9 PM. Order at least ' + (S.lead_minutes || 15) + ' minutes ahead, or book up to a few days ahead. Delivery ' + peso(S.fee_rule.first) + ' for the first km, plus ' + peso(S.fee_rule.per) + ' per km after' + (S.delivery_area ? ', ' + esc(S.delivery_area) : '') + '.</div>';
   h += '<div class="sec"><h2>Kare-Kare meals</h2><span>tap to add</span></div><div class="meals">';
   meals.forEach(function(m){
     var q = CART[m.id] || 0;
-    h += '<div class="meal' + (soldOut(m) ? ' out' : '') + '"' + (soldOut(m) ? '' : ' onclick="openMeal(\'' + m.id + '\')"') + '><img src="' + (PHOTO[m.id] || 'img/kk.jpg') + '" alt=""><div class="info">' + (BADGE[m.id] ? '<span class="badge ' + BADGE[m.id][1] + '">' + BADGE[m.id][0] + '</span>' : '') + '<h3>' + esc(m.name) + '</h3><p>' + esc(BLURB[m.id] || '') + '</p><span class="serves">&#128101; ' + SERVES + '</span>'
+    h += '<div class="meal' + (soldOut(m) ? ' out' : '') + '"' + (soldOut(m) ? '' : ' onclick="openMeal(\'' + m.id + '\')"') + '><img src="' + (CARD[m.id] || PHOTO[m.id] || 'img/kk.jpg') + '" alt=""><div class="info">' + (BADGE[m.id] ? '<span class="badge ' + BADGE[m.id][1] + '">' + BADGE[m.id][0] + '</span>' : '') + '<h3>' + esc(m.name) + '</h3><p>' + esc(BLURB[m.id] || '') + '</p><span class="serves">&#128101; ' + SERVES + '</span>'
       + '<div class="row"><span class="price">' + peso(m.price) + '</span>' + (soldOut(m) ? '<span class="soldout">Sold out</span>' : q ? '<span class="incart">' + q + ' in cart</span>' : '<button class="addbtn">Add</button>') + '</div></div></div>';
   });
   h += '</div>' + reviews('ALL') + '<div class="sec"><h2>Add ons and drinks</h2></div><div class="list">';
   adds.forEach(function(m){
-    h += '<div class="li"><div class="nm"><b>' + esc(m.name) + '</b><small>' + peso(m.price) + '</small></div>' + (soldOut(m) ? '<span class="soldout">Sold out</span>' : stepper(m.id, CART[m.id] || 0, 'bump')) + '</div>';
+    h += '<div class="li">' + ((THUMB[m.id]||PHOTO[m.id]) ? '<img class="thumb" src="' + (THUMB[m.id]||PHOTO[m.id]) + '" alt="">' : '') + '<div class="nm"><b>' + esc(m.name) + '</b><small>' + peso(m.price) + '</small></div>' + (soldOut(m) ? '<span class="soldout">Sold out</span>' : stepper(m.id, CART[m.id] || 0, 'bump')) + '</div>';
   });
   h += '</div>';
   $('app').innerHTML = h;
@@ -361,7 +364,7 @@ function openMeal(id){
     + (function(){ var r = (S.reviews || []).filter(function(x){ return x.item === id; }); return r.length ? reviews(id).replace('<div class="promos">', '<div class="promos" style="margin:4px -16px 8px">') : ''; })()
     + '<div class="li" style="padding:10px 0"><div class="nm"><b>How many</b><small>' + peso(m.price) + ' each</small></div><div id="sq">' + stepper('main', SHEET.qty, 'sheetBump') + '</div></div>'
     + '<label class="f">Add ons <small>optional</small></label><div class="list">';
-  adds.forEach(function(a){ h += '<div class="li"><div class="nm"><b>' + esc(a.name) + '</b><small>+' + peso(a.price) + '</small></div><div id="sa_' + a.id + '">' + stepper(a.id, 0, 'sheetBump') + '</div></div>'; });
+  adds.forEach(function(a){ h += '<div class="li">' + ((THUMB[a.id]||PHOTO[a.id]) ? '<img class="thumb" src="' + (THUMB[a.id]||PHOTO[a.id]) + '" alt="">' : '') + '<div class="nm"><b>' + esc(a.name) + '</b><small>+' + peso(a.price) + '</small></div><div id="sa_' + a.id + '">' + stepper(a.id, 0, 'sheetBump') + '</div></div>'; });
   h += '</div><br><button class="btn dark" id="sheetAdd" onclick="sheetAdd()"></button></div>';
   $('sheet').innerHTML = h; sheetTotal();
   $('sheetBg').style.display = 'block'; requestAnimationFrame(function(){ $('sheet').classList.add('open'); });
