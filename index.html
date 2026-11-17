@@ -173,7 +173,7 @@ footer b{color:var(--k);font-family:'Nunito',sans-serif}
 @media(max-width:400px){.qr{flex-direction:column;align-items:flex-start}.qr img{width:150px;height:150px;flex-basis:auto;align-self:center}}
 .layout2{display:block}
 @media(min-width:960px){main{max-width:980px}.layout2{display:grid;grid-template-columns:1.15fr .85fr;gap:20px;align-items:start}.layout2 .side{position:sticky;top:84px}.meals{display:grid;grid-template-columns:1fr 1fr;gap:12px}.meals .meal{margin:0}}
-@media(min-width:700px){.hero img{height:280px}.meal img{width:132px;height:132px;flex-basis:132px}}
+@media(min-width:700px){.hero img{height:520px;object-position:50% 0}.meal img{width:132px;height:132px;flex-basis:132px}}
 .hol{background:#111;color:#fff;min-height:100vh;margin:-8px -16px 0;padding:0 0 30px;font-family:'Nunito',system-ui,sans-serif}
 .hol-hero{padding:40px 24px 30px;text-align:center}
 .hol-badge{display:inline-block;background:var(--y);color:#000;font-family:'Fira Sans',sans-serif;font-weight:900;font-size:12px;letter-spacing:1.5px;padding:6px 14px;border-radius:20px;margin-bottom:18px}
@@ -204,7 +204,7 @@ footer b{color:var(--k);font-family:'Nunito',sans-serif}
   <a href="#/" aria-label="PABAON home"><img src="logo-sm.png" alt="PABAON" width="88" height="42"></a>
   <nav><a href="#/" data-v="menu">Menu</a><a href="#/track" data-v="track">Track</a><a href="#/stamps" data-v="stamps">Stamps</a></nav>
 </header>
-<main id="app"><section class="hero"><img src="img/b2/hero.jpg" alt="PABAON kare-kare"><div class="cap"><h1>A True <b>TASTE of HOME</b> Anytime &amp; Anywhere</h1><p>Delivered or for pick up. Free bagoong with every meal.</p></div></section><p class="center" style="padding:30px 0"><span class="spin"></span></p></main>
+<main id="app"><section class="hero"><picture><source media="(min-width:700px)" srcset="img/b2/hero-wide.jpg"><img src="img/b2/hero.jpg" alt="PABAON kare-kare"></picture><div class="cap"><h1>A True <b>TASTE of HOME</b> Anytime &amp; Anywhere</h1><p>Delivered or for pick up. Free bagoong with every meal.</p></div></section><p class="center" style="padding:30px 0"><span class="spin"></span></p></main>
 <div class="bar" id="bar" style="display:none"><button id="barBtn" onclick="go('#/checkout')"></button></div>
 <div class="sheet-bg" id="sheetBg" onclick="closeSheet()"></div>
 <div class="sheet" id="sheet"></div>
@@ -304,7 +304,7 @@ function holidayClosed(){
 }
 function menu(){
   var meals = S.menu.filter(function(m){ return m.meal; }).sort(function(a, b){ return (ORDER.indexOf(a.id) + 99) % 99 - (ORDER.indexOf(b.id) + 99) % 99; }), adds = S.menu.filter(function(m){ return !m.meal; });
-  var h = promos() + '<section class="hero"><img src="img/b2/hero.jpg" alt="PABAON kare-kare"><div class="cap"><h1>A True <b>TASTE of HOME</b> Anytime &amp; Anywhere</h1><p>Delivered or for pick up. Free bagoong with every meal.</p></div></section>';
+  var h = promos() + '<section class="hero"><picture><source media="(min-width:700px)" srcset="img/b2/hero-wide.jpg"><img src="img/b2/hero.jpg" alt="PABAON kare-kare"></picture><div class="cap"><h1>A True <b>TASTE of HOME</b> Anytime &amp; Anywhere</h1><p>Delivered or for pick up. Free bagoong with every meal.</p></div></section>';
   if (!S.open) h += '<div class="notice bad">We are not taking online orders right now. Please check back soon.</div>';
   else h += '<div class="notice">Open ' + hr12(Number(String(S.slots[1] && S.slots[1].times[0] ? S.slots[1].times[0].value : '10').slice(0,2))) + ' to 9 PM. Order at least ' + (S.lead_minutes || 15) + ' minutes ahead, or book up to a few days ahead. Delivery ' + peso(S.fee_rule.first) + ' for the first km, plus ' + peso(S.fee_rule.per) + ' per km after' + (S.delivery_area ? ', ' + esc(S.delivery_area) : '') + '.</div>';
   h += '<div class="sec"><h2>Kare-Kare meals</h2><span>tap to add</span></div><div class="meals">';
